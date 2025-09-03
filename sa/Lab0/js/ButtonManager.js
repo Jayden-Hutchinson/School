@@ -1,0 +1,3 @@
+class ButtonManager {
+  colourButtons = [];
+}
