@@ -1,7 +1,7 @@
-const goButton = "go-button";
+const startButton = "start-button";
 
 class ButtonManager {
-  goButton = document.getElementById(goButton);
+  goButton = document.getElementById(startButton);
   colourButtons = [];
 }
 
