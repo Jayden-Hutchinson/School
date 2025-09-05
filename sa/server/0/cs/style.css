@@ -7,10 +7,6 @@ body * {
   display: flex;
 }
 
-* {
-  color: white;
-}
-
 .content {
   display: flex;
   flex-direction: column;
@@ -20,6 +16,16 @@ body * {
   width: 100vw;
   height: 100vh;
   background-color: black;
+}
+
+#num-buttons-form {
+  flex-direction: column;
+  font-size: 24px;
+  gap: 30px;
+}
+
+.num-buttons-label {
+  color: white;
 }
 
 .game-buttons {

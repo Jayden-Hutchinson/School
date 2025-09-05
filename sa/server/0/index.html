@@ -8,10 +8,13 @@
   </head>
   <body>
     <div class="content">
-      <label>How many buttons to create?</label>
+      <form id="num-buttons-form">
+        <label class="num-buttons-label">How many buttons to create?</label>
+        <input type="text" id="num-buttons-input" />
+        <button id="start-button">Start!</button>
+      </form>
+
       <div id="game-button-container" class="game-buttons"></div>
-      <input type="text" id="num-buttons-input" />
-      <button id="start-button">Start!</button>
     </div>
     <script type="module" src="js/App.js"></script>
   </body>
