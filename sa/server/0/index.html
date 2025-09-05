@@ -9,16 +9,10 @@
   <body>
     <div class="content">
       <label>How many buttons to create?</label>
-      <div class="game-buttons">
-        <div class="GameButton">1</div>
-        <div class="GameButton">2</div>
-        <div class="GameButton">3</div>
-        <div class="GameButton">4</div>
-        <div class="GameButton">5</div>
-      </div>
-      <input type="text" name="num-buttons" />
+      <div id="game-button-container" class="game-buttons"></div>
+      <input type="text" id="num-buttons-input" />
       <button id="start-button">Start!</button>
     </div>
-    <script type="module" src="js/ButtonManager.js"></script>
+    <script type="module" src="js/App.js"></script>
   </body>
 </html>
