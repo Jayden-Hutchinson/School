@@ -28,6 +28,11 @@ body * {
   color: white;
 }
 
+
+#start-button {
+  background-color: grey;
+}
+
 .game-buttons {
   flex-direction: row;
   justify-content: space-evenly;
@@ -44,8 +49,4 @@ body * {
   align-items: center;
   justify-content: center;
   color: black;
-}
-
-#start-button {
-  background-color: grey;
 }

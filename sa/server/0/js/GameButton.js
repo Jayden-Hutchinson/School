@@ -3,7 +3,7 @@ const CLASS_NAME = "GameButton";
 export class GameButton extends HTMLButtonElement {
   constructor(index, colour) {
     super();
-    this.index = index;
+    this.value = index;
     this.style.backgroundColor = colour;
     this.className = CLASS_NAME;
     this.textContent = index;
