@@ -7,10 +7,6 @@ body * {
   display: flex;
 }
 
-* {
-  color: white;
-}
-
 .content {
   display: flex;
   flex-direction: column;
@@ -22,6 +18,22 @@ body * {
   background-color: black;
 }
 
+#num-buttons-form {
+  flex-direction: column;
+  font-size: 24px;
+  gap: 60px;
+}
+
+#start-message {
+  color: white;
+}
+
+
+#start-button {
+  background-color: grey;
+  justify-content: center;
+}
+
 .game-buttons {
   flex-direction: row;
   justify-content: space-evenly;
@@ -29,7 +41,6 @@ body * {
 }
 
 .GameButton {
-  background-color: lightblue;
   width: 10em;
   height: 5em;
 
@@ -39,8 +50,4 @@ body * {
   align-items: center;
   justify-content: center;
   color: black;
-}
-
-#start-button {
-  background-color: grey;
 }

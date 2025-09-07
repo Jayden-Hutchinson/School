@@ -2,6 +2,9 @@ export const MS_PER_SECOND = 1000;
 export const START_INDEX = 0;
 export const FIRST_VALUE = 1;
 export const EMPTY_STRING = "";
+export const MAX_GAME_BUTTONS = 7;
+export const MIN_GAME_BUTTONS = 3;
+
 
 export const SCRAMBLE = {
     repeats: 2,
@@ -14,10 +17,10 @@ export const COLOR = {
 }
 
 export const HEX = {
+    symbol: "#",
+    letters: "0123456789ABCDEF",
     base: 16,
     digits: 6,
-    letters: "0123456789ABCDEF",
-    symbol: "#"
 }
 
 export const UNIT = {
@@ -26,9 +29,10 @@ export const UNIT = {
 
 export const ID = {
     gameBoard: "game-button-container",
-    input: "num-buttons-input",
+    numButtonsInput: "num-buttons-input",
     startButton: "start-button",
     startGameForm: "num-buttons-form",
+    startMessage: "start-message"
 };
 
 export const EVENT = {

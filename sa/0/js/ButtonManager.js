@@ -6,6 +6,7 @@ export class ButtonManager {
   constructor() {
     this.gameButtons = [];
     this.hexGenerator = new HexGenerator();
+    this.numButtons;
   }
 
   /**
@@ -17,6 +18,7 @@ export class ButtonManager {
       const gameButton = new GameButton(i, randomColour)
       this.gameButtons.push(gameButton);
     }
+    this.numButtons = this.gameButtons.length;
   }
 
   appendGameButtons(gameBoard) {

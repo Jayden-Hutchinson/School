@@ -1,20 +1,30 @@
 import { ButtonManager } from "./ButtonManager.js";
 import { FormManger } from "./FormManager.js";
+import { messages } from "../lang/messages/en/user.js"
 import * as env from "./constants.js"
 
 class App {
   constructor() {
-    this.gameBoard = document.getElementById(env.ID.gameBoard);
-    this.buttonManager = new ButtonManager();
-    this.formManager = new FormManger();
     this.buttonsClicked = env.FIRST_VALUE;
     this.gameButtonIndex = env.START_INDEX;
 
+    this.buttonManager = new ButtonManager();
+    this.formManager = new FormManger();
+
+    this.gameBoard = document.getElementById(env.ID.gameBoard);
+    this.startButton = document.getElementById(env.ID.startButton);
+
+
     this.start = this.start.bind(this)
+
+    this.formManager.setText();
     this.formManager.onStartClicked(this.start)
   }
 
   async start(numButtons) {
+    console.log("start")
+    this.gameBoard.innerHTML = env.EMPTY_STRING;
+
     this.buttonManager.createGameButtons(numButtons);
     this.buttonManager.appendGameButtons(this.gameBoard)
 
@@ -30,6 +40,10 @@ class App {
 
     if (isCorrect) {
       this.updateGame();
+
+      if (this.buttonsClicked >= this.buttonManager.numButtons) {
+        this.endGame();
+      }
     }
     else {
       this.endGame();
@@ -42,6 +56,7 @@ class App {
   }
 
   endGame() {
+    console.log("endGame()")
     this.buttonManager.revealGameButtons();
     this.buttonManager.disableGameButtons(this.checkAnswer);
   }
@@ -50,7 +65,6 @@ class App {
     this.buttonsClicked++;
     this.gameButtonIndex++;
   }
-
 }
 
 new App();
