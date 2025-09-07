@@ -1,6 +1,6 @@
 export const messages = {
-    startMessage: "How many buttons to create?",
-    successMessage: "Excellent Memory!",
-    failMessage: "Wrong Order!",
-    startButton: "Start!"
+    start: "How many buttons to create?",
+    startButton: "Start!",
+    success: "Excellent Memory!",
+    fail: "Wrong Order!",
 }

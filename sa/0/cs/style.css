@@ -34,11 +34,26 @@ body * {
   justify-content: center;
 }
 
+#end-message {
+  display: none;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+
+  font-family: sans-serif;
+  font-size: 48px;
+  color: white;
+  font-weight: bold;
+}
+
 .game-buttons {
   flex-direction: row;
   justify-content: space-evenly;
   width: 100%;
 }
+
 
 .GameButton {
   width: 10em;

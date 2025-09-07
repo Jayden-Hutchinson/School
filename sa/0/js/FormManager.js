@@ -10,7 +10,7 @@ export class FormManger {
     }
 
     setText() {
-        this.startMessage.textContent = messages.startMessage;
+        this.startMessage.textContent = messages.start;
         this.startButton.textContent = messages.startButton;
     }
 

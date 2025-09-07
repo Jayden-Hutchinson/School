@@ -13,16 +13,17 @@ class App {
 
     this.gameBoard = document.getElementById(env.ID.gameBoard);
     this.startButton = document.getElementById(env.ID.startButton);
+    this.endMessage = document.getElementById(env.ID.endMessage);
 
+    this.start = this.start.bind(this);
 
-    this.start = this.start.bind(this)
-
+    this.win = false
     this.formManager.setText();
-    this.formManager.onStartClicked(this.start)
+    this.formManager.onStartClicked(this.start);
   }
 
   async start(numButtons) {
-    console.log("start")
+    console.log("start");
     this.gameBoard.innerHTML = env.EMPTY_STRING;
 
     this.buttonManager.createGameButtons(numButtons);
@@ -42,6 +43,7 @@ class App {
       this.updateGame();
 
       if (this.buttonsClicked >= this.buttonManager.numButtons) {
+        this.win = true;
         this.endGame();
       }
     }
@@ -59,6 +61,9 @@ class App {
     console.log("endGame()")
     this.buttonManager.revealGameButtons();
     this.buttonManager.disableGameButtons(this.checkAnswer);
+
+    this.endMessage.textContent = this.win ? messages.success : messages.fail;
+    this.endMessage.style.display = env.DISPLAY.flex;
   }
 
   updateCounters() {

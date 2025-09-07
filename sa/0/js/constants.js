@@ -32,7 +32,8 @@ export const ID = {
     numButtonsInput: "num-buttons-input",
     startButton: "start-button",
     startGameForm: "num-buttons-form",
-    startMessage: "start-message"
+    startMessage: "start-message",
+    endMessage: "end-message"
 };
 
 export const EVENT = {
@@ -42,6 +43,7 @@ export const EVENT = {
 
 export const DISPLAY = {
     none: "none",
+    flex: "flex"
 };
 
 export const POSITION = {
