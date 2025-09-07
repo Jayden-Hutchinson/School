@@ -4,3 +4,4 @@ deployment:
     - /bin/cp -r sa/* $DEPLOYPATH
     - cd $DEPLOYPATH
     - /usr/local/bin/npm install
+    - echo "Deployment Complete"
