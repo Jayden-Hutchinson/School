@@ -2,7 +2,6 @@ const expressID = "express";
 const pathID = "path";
 const fsID = "fs";
 const defaultPort = 3000;
-const rootPath = "/";
 
 // app.js
 const express = require(expressID);
@@ -11,15 +10,17 @@ const fs = require(fsID);
 const app = express();
 const port = process.env.PORT || defaultPort;
 
-const labs = fs.readdirSync(__dirname).filter((file) => {
-  return fs.statSync(path.join(__dirname, file)).isDirectory();
+const rootPath = "/";
+const publicDir = path.join(__dirname, "public")
+
+const labs = fs.readdirSync(publicDir).filter((file) => {
+  return fs.statSync(path.join(publicDir, file)).isDirectory();
 });
 
 labs.forEach((lab) => {
-  const folderPath = path.join(__dirname, lab);
-  const routePath = `/COMP4537/labs/${lab}`;
+  const urlRoute = `/COMP4537/labs/${lab}`;
 
-  app.use(routePath, express.static(folderPath));
+  app.use(urlRoute, express.static(path.join(publicDir, lab)));
 
   console.log(`Serving Lab ${lab}`);
 });

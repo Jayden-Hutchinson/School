@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/jhutchin/nodeapp/public/
+    - /bin/cp -r public/* $DEPLOYPATH
