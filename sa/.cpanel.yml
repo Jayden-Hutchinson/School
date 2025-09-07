@@ -1,4 +1,6 @@
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/jhutchin/nodeapp/public/
-    - /bin/cp -r public/* $DEPLOYPATH
+    - export DEPLOYPATH=/home/jhutchin/nodeapp/
+    - /bin/cp -r sa/* $DEPLOYPATH
+    - cd $DEPLOYPATH
+    - /usr/local/bin/npm install
