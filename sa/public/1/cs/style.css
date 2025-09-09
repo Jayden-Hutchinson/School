@@ -1,57 +1,76 @@
 body {
-    padding: 0;
-    margin: 0;
-    background-color: #00141a;
-    width: 100vw;
-    height: 100vh;
+  padding: 0;
+  margin: 0;
+  background-color: #00141a;
+  width: 100vw;
+  height: 100vh;
 }
 
 body * {
-    display: flex;
-    box-sizing: border-box;
+  display: flex;
+  box-sizing: border-box;
+  font-family: sans-serif;
 }
 
-#container {
-    width: 100%;
-    height: 100%;
+#app {
+  flex-direction: column;
+  align-items: center;
 
-    color: white;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 100%;
+
+  color: white;
+}
+
+#title {
+  font-size: 48px;
+  padding: 50px 0px;
+}
+
+#note-list {
+  flex-direction: column;
+  width: 100%;
 }
 
 .note {
-    height: 100px;
-    width: 100%;
+  height: 100px;
+  width: 100%;
 
-    padding: 50px 0px;
+  padding: 50px 0px;
 
-    justify-content: space-evenly;
-    align-items: center;
+  justify-content: space-evenly;
+  align-items: center;
 
-    height: fit-content;
-}
-
-.note-text-area:focus {
-    outline: none;
-    border: none;
-    box-shadow: none;
+  height: fit-content;
 }
 
 .note-text-area {
-    font-size: 18px;
-    padding: 2rem;
-    width: 60%;
-    resize: none;
-    overflow: hidden;
+  font-size: 18px;
+  padding: 2rem;
+  width: 60%;
+  resize: none;
+  overflow: hidden;
 
-    background-color: #3b3b3b;
-    border: none;
-    border-radius: 10px;
+  background-color: #3b3b3b;
+  border: none;
+  border-radius: 10px;
 
-    color: white;
+  color: white;
 }
 
-.note-remove-button {
-    background-color: white;
+.note-text-area:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.button {
+  align-items: center;
+  justify-content: center;
+
+  width: 100px;
+  height: 50px;
+  border-radius: 10px;
+
+  background-color: lightblue;
 }

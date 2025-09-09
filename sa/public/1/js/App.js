@@ -1,23 +1,32 @@
-import { ID } from "./env.js"
+import { ID, EVENT } from "./env.js";
 
-import { NoteConstructor } from "./NoteConstructor.js"
-import { NoteManager } from "./NoteManager.js"
+import { NoteManager } from "./NoteManager.js";
+import { NoteConstructor } from "./NoteConstructor.js";
+import { ElementConstructor } from "./ElementConstructor.js";
 
 class App {
-    constructor() {
-        this.container = document.getElementById(ID.CONTAINER);
+  constructor() {
+    this.noteConstructor = new NoteConstructor();
+    this.noteManager = new NoteManager();
 
-        this.noteConstructor = new NoteConstructor();
-        this.noteManager = new NoteManager(container);
+    this.app = document.getElementById(ID.APP);
 
-        const newNote = this.noteConstructor.createNote();
-        this.noteManager.addNote(newNote)
-        console.log("App contructor done")
-    }
+    this.title = ElementConstructor.createTitle();
+    this.noteList = ElementConstructor.createNoteList();
+    this.addButton = ElementConstructor.createAddButton();
 
-    run() {
-        console.log("App running...")
-    }
+    this.addButton.addEventListener(EVENT.CLICK, () => {
+      const note = this.noteConstructor.createNote();
+      this.noteManager.addNote(note);
+      this.noteList.appendChild(note.element);
+    });
+
+    this.app.appendChild(this.title);
+    this.app.appendChild(this.noteList);
+    this.app.appendChild(this.addButton);
+
+    console.log("App contructor done");
+  }
 }
 
-new App().run();
+new App();

@@ -1,7 +1,7 @@
-import { Note } from "./Note.js"
+import { Note } from "./Note.js";
 
 export class NoteConstructor {
-    createNote() {
-        return new Note()
-    }
+  createNote(text = null) {
+    return new Note(text);
+  }
 }

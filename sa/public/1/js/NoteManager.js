@@ -1,14 +1,13 @@
-
 export class NoteManager {
-    constructor(container) {
-        this.container = container
-    }
+  constructor() {
+    this.notes = [];
+  }
 
-    addNote(note) {
-        if (container) {
-            container.appendChild(note.element)
-        } else {
-            console.log("Note manager container null")
-        }
+  addNote(note) {
+    if (this.ul) {
+      this.notes.push(note);
+    } else {
+      console.log("Note manager container null");
     }
+  }
 }

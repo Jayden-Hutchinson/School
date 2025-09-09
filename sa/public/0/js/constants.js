@@ -5,47 +5,46 @@ export const EMPTY_STRING = "";
 export const MAX_GAME_BUTTONS = 7;
 export const MIN_GAME_BUTTONS = 3;
 
-
 export const SCRAMBLE = {
-    repeats: 2,
-    repeatInterval: 2000
-}
+  repeats: 2,
+  repeatInterval: 2000,
+};
 
 export const COLOR = {
-    black: "black",
-    transparent: "transparent"
-}
+  black: "black",
+  transparent: "transparent",
+};
 
 export const HEX = {
-    symbol: "#",
-    letters: "0123456789ABCDEF",
-    base: 16,
-    digits: 6,
-}
+  symbol: "#",
+  letters: "0123456789ABCDEF",
+  base: 16,
+  digits: 6,
+};
 
 export const UNIT = {
-    px: "px"
-}
+  px: "px",
+};
 
 export const ID = {
-    gameBoard: "game-button-container",
-    numButtonsInput: "num-buttons-input",
-    startButton: "start-button",
-    startGameForm: "num-buttons-form",
-    startMessage: "start-message",
-    endMessage: "end-message"
+  gameBoard: "game-button-container",
+  numButtonsInput: "num-buttons-input",
+  startButton: "start-button",
+  startGameForm: "num-buttons-form",
+  startMessage: "start-message",
+  endMessage: "end-message",
 };
 
 export const EVENT = {
-    contentLoaded: "DOMContentLoaded",
-    click: "click",
+  contentLoaded: "DOMContentLoaded",
+  click: "click",
 };
 
 export const DISPLAY = {
-    none: "none",
-    flex: "flex"
+  none: "none",
+  flex: "flex",
 };
 
 export const POSITION = {
-    absolute: "absolute",
+  absolute: "absolute",
 };
