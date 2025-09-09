@@ -4,10 +4,7 @@ export class NoteManager {
   }
 
   addNote(note) {
-    if (this.ul) {
-      this.notes.push(note);
-    } else {
-      console.log("Note manager container null");
-    }
+    this.notes.push(note);
+    console.log(this.notes);
   }
 }

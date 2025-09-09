@@ -24,8 +24,6 @@ class App {
     this.app.appendChild(this.title);
     this.app.appendChild(this.noteList);
     this.app.appendChild(this.addButton);
-
-    console.log("App contructor done");
   }
 }
 
