@@ -1,6 +1,6 @@
 const clickEvent = "click";
 const startButtonID = "start-button";
 
-const startButton = document.getElementById(startButtonID);
+const startButton = document.getHTML.getElementById(startButtonID);
 
 startButton.addEventListener(clickEvent, () => {});

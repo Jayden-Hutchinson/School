@@ -1,11 +1,11 @@
-const CLASS_NAME = "GameButton";
+const HTML.CLASS = "GameButton";
 
-export class GameButton extends HTMLButtonElement {
+export class GameButton extends HTMLButtonHTML.ELEMENT {
   constructor(index, colour) {
     super();
     this.value = index;
     this.style.backgroundColor = colour;
-    this.className = CLASS_NAME;
+    this.className = HTML.CLASS;
     this.textContent = index;
   }
 
@@ -15,4 +15,4 @@ export class GameButton extends HTMLButtonElement {
   }
 }
 
-customElements.define("game-button", GameButton, { extends: "button" });
+customHTML.ELEMENTs.define("game-button", GameButton, { extends: "button" });

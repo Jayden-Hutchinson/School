@@ -1,7 +1,7 @@
 import { ButtonManager } from "./ButtonManager.js";
 import { FormManger } from "./FormManager.js";
-import { messages } from "../lang/messages/en/user.js"
-import * as env from "./constants.js"
+import { messages } from "../lang/messages/en/user.js";
+import * as env from "./constants.js";
 
 class App {
   constructor() {
@@ -11,13 +11,13 @@ class App {
     this.buttonManager = new ButtonManager();
     this.formManager = new FormManger();
 
-    this.gameBoard = document.getElementById(env.ID.gameBoard);
-    this.startButton = document.getElementById(env.ID.startButton);
-    this.endMessage = document.getElementById(env.ID.endMessage);
+    this.gameBoard = document.getHTML.getElementById(env.ID.gameBoard);
+    this.startButton = document.getHTML.getElementById(env.ID.startButton);
+    this.endMessage = document.getHTML.getElementById(env.ID.endMessage);
 
     this.start = this.start.bind(this);
 
-    this.win = false
+    this.win = false;
     this.formManager.setText();
     this.formManager.onStartClicked(this.start);
   }
@@ -27,17 +27,16 @@ class App {
     this.gameBoard.innerHTML = env.EMPTY_STRING;
 
     this.buttonManager.createGameButtons(numButtons);
-    this.buttonManager.appendGameButtons(this.gameBoard)
+    this.buttonManager.appendGameButtons(this.gameBoard);
 
     await this.buttonManager.scrambleGameButtons();
 
-    this.checkAnswer = this.checkAnswer.bind(this)
+    this.checkAnswer = this.checkAnswer.bind(this);
     this.buttonManager.initializeGameButtons(this.checkAnswer);
   }
 
-
   checkAnswer(value) {
-    const isCorrect = value == this.buttonsClicked
+    const isCorrect = value == this.buttonsClicked;
 
     if (isCorrect) {
       this.updateGame();
@@ -46,19 +45,18 @@ class App {
         this.win = true;
         this.endGame();
       }
-    }
-    else {
+    } else {
       this.endGame();
     }
     this.updateCounters();
   }
 
   updateGame() {
-    this.buttonManager.revealGameButton(this.gameButtonIndex)
+    this.buttonManager.revealGameButton(this.gameButtonIndex);
   }
 
   endGame() {
-    console.log("endGame()")
+    console.log("endGame()");
     this.buttonManager.revealGameButtons();
     this.buttonManager.disableGameButtons(this.checkAnswer);
 

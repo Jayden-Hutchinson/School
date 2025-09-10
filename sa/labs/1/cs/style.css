@@ -12,6 +12,10 @@ body * {
   font-family: sans-serif;
 }
 
+script {
+  display: none;
+}
+
 #app {
   flex-direction: column;
   align-items: center;
@@ -73,4 +77,13 @@ body * {
   border-radius: 10px;
 
   background-color: lightblue;
+}
+
+.links {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+
+  font-size: 24px;
 }
