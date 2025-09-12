@@ -1,10 +1,10 @@
 import { HTML, TITLE, NOTE_LIST } from "./env.js";
 
-import { NoteManager } from "./NoteManager.js";
+import { Note } from "./Note.js";
 
 class Reader {
   constructor() {
-    this.noteManager = new NoteManager();
+    this.notes = [];
 
     this.container = document.getElementById(HTML.ID.APP);
 
@@ -17,6 +17,15 @@ class Reader {
 
     this.container.appendChild(this.title);
     this.container.appendChild(this.noteList);
+  }
+
+  loadNotes() {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const text = localStorage.getItem(key);
+      const note = new Note(key, text);
+      this.notes.push(note);
+    }
   }
 }
 

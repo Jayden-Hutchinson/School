@@ -34,6 +34,7 @@ export const READER = {
 export const WRITER = {
   TEXT: "Writer",
   LINK: "writer.html",
+  WRITE_INTERVAL: 2000,
 };
 
 export const NOTE = {

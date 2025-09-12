@@ -1,6 +1,6 @@
 import { HexGenerator } from "./HexGenerator.js";
 import { GameButton } from "./GameButton.js";
-import * as env from "./constants.js"
+import * as env from "./constants.js";
 
 export class ButtonManager {
   constructor() {
@@ -9,13 +9,10 @@ export class ButtonManager {
     this.numButtons;
   }
 
-  /**
-   * 
-   */
   createGameButtons(numButtons) {
     for (let i = env.FIRST_VALUE; i <= numButtons; i++) {
       const randomColour = this.hexGenerator.randomHex();
-      const gameButton = new GameButton(i, randomColour)
+      const gameButton = new GameButton(i, randomColour);
       this.gameButtons.push(gameButton);
     }
     this.numButtons = this.gameButtons.length;
@@ -24,7 +21,7 @@ export class ButtonManager {
   appendGameButtons(gameBoard) {
     this.gameButtons.forEach((button) => {
       gameBoard.appendChild(button);
-    })
+    });
   }
 
   scrambleGameButtons() {
@@ -32,7 +29,6 @@ export class ButtonManager {
     return new Promise((resolve) => {
       setTimeout(() => {
         this.gameButtons.forEach((button) => {
-
           let repeatCount = env.START_INDEX;
           this.setRandomPosition(button);
 
@@ -45,9 +41,9 @@ export class ButtonManager {
               resolve();
             }
           }, env.SCRAMBLE.repeatInterval);
-        })
-      }, startDelayMilliseconds)
-    })
+        });
+      }, startDelayMilliseconds);
+    });
   }
 
   initializeGameButtons(onClick) {
@@ -56,15 +52,14 @@ export class ButtonManager {
 
       button.addEventListener(env.EVENT.click, () => {
         onClick(button.value);
-      })
-    })
+      });
+    });
   }
 
   disableGameButtons(onClick) {
     this.gameButtons.forEach((button) => {
-      button.removeEventListener(env.EVENT.click, onClick)
-    })
-
+      button.removeEventListener(env.EVENT.click, onClick);
+    });
   }
 
   revealGameButton(index) {
@@ -73,8 +68,8 @@ export class ButtonManager {
 
   revealGameButtons() {
     this.gameButtons.forEach((button) => {
-      button.style.color = env.COLOR.black
-    })
+      button.style.color = env.COLOR.black;
+    });
   }
 
   setRandomPosition(button) {
@@ -87,6 +82,5 @@ export class ButtonManager {
     button.style.position = env.POSITION.absolute;
     button.style.left = `${randomX}${env.UNIT.px}`;
     button.style.top = `${randomY}${env.UNIT.px}`;
-
   }
 }
