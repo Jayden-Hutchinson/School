@@ -11,9 +11,9 @@ class App {
     this.buttonManager = new ButtonManager();
     this.formManager = new FormManger();
 
-    this.gameBoard = document.getHTML.getElementById(env.ID.gameBoard);
-    this.startButton = document.getHTML.getElementById(env.ID.startButton);
-    this.endMessage = document.getHTML.getElementById(env.ID.endMessage);
+    this.gameBoard = document.getElementById(env.ID.gameBoard);
+    this.startButton = document.getElementById(env.ID.startButton);
+    this.endMessage = document.getElementById(env.ID.endMessage);
 
     this.start = this.start.bind(this);
 

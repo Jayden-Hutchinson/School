@@ -15,9 +15,9 @@ export class Note {
       this.textArea.style.height = `${this.textArea.scrollHeight}px`;
     });
 
-    this.removeButton = this.removeButton();
-    this.removeButton = HTML.CLASS.BUTTON;
-    this.removeButton = NOTE.REMOVE_BUTTON.TEXT_CONTENT;
+    this.removeButton = document.createElement(HTML.ELEMENT.BUTTON);
+    this.removeButton.className = HTML.CLASS.BUTTON;
+    this.removeButton.textContent = NOTE.REMOVE_BUTTON.TEXT_CONTENT;
     this.removeButton.addEventListener(HTML.EVENT.CLICK, () => {
       if (onRemove) onRemove(this);
     });
@@ -27,7 +27,6 @@ export class Note {
   }
 
   getText() {
-    console.log(this.textArea.value);
     return this.textArea.value;
   }
 }

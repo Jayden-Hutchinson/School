@@ -19,11 +19,8 @@ class Writer {
     this.addButton.textContent = NOTE_LIST.ADD_BUTTON.TEXT_CONTENT;
 
     this.addButton.addEventListener(HTML.EVENT.CLICK, () => {
-      console.log(localStorage.length);
-      const index = localStorage.length;
-      const note = new Note(index);
-      this.notes.push(note);
-      this.noteUL.appendChild(note.container);
+      const note = this.createNote();
+      this.addNote(note);
     });
 
     this.container.appendChild(this.title);
@@ -33,18 +30,18 @@ class Writer {
     setInterval(() => this.saveNotes(), WRITER.WRITE_INTERVAL);
   }
 
-  addNote() {
-    console.log("adding note");
+  createNote() {
     const key = localStorage.length;
-    const note = new Note(key, (noteInstance) => this.removeNote(noteInstance));
-    console.log(note.key);
+    return new Note(key, (noteInstance) => this.removeNote(noteInstance));
+  }
+
+  addNote(note) {
     this.notes.push(note);
-    this.container.appendChild(note.container);
+    this.noteUL.appendChild(note.container);
   }
 
   removeNote(note) {
-    console.log("removing note");
-    this.notes.splice(note.key, 1);
+    note.container.remove();
     localStorage.removeItem(note.key);
   }
 

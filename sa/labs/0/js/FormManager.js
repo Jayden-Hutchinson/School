@@ -3,12 +3,10 @@ import { messages } from "../lang/messages/en/user.js";
 
 export class FormManger {
   constructor() {
-    this.startGameForm = document.getHTML.getElementById(env.ID.startGameForm);
-    this.startMessage = document.getHTML.getElementById(env.ID.startMessage);
-    this.numButtonsInput = document.getHTML.getElementById(
-      env.ID.numButtonsInput
-    );
-    this.startButton = document.getHTML.getElementById(env.ID.startButton);
+    this.startGameForm = document.getElementById(env.ID.startGameForm);
+    this.startMessage = document.getElementById(env.ID.startMessage);
+    this.numButtonsInput = document.getElementById(env.ID.numButtonsInput);
+    this.startButton = document.getElementById(env.ID.startButton);
   }
 
   setText() {
