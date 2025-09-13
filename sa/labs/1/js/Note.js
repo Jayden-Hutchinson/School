@@ -1,7 +1,14 @@
 import { HTML, NOTE } from "./env.js";
 
 export class Note {
-  constructor(key, onRemove, text = null) {
+  /**
+   *
+   * @param {int} key - Note Key for local storage
+   * @param {function} onRemove - Callback to remove the note from its list
+   * @param {string} text - Text content of the note
+   * @param {string} mode - Mode for Read or Write
+   */
+  constructor(key, text = null) {
     this.key = key;
     this.container = document.createElement(HTML.ELEMENT.DIV);
     this.container.className = HTML.CLASS.NOTE;
@@ -14,16 +21,7 @@ export class Note {
     this.textArea.addEventListener(HTML.EVENT.INPUT, () => {
       this.textArea.style.height = `${this.textArea.scrollHeight}px`;
     });
-
-    this.removeButton = document.createElement(HTML.ELEMENT.BUTTON);
-    this.removeButton.className = HTML.CLASS.BUTTON;
-    this.removeButton.textContent = NOTE.REMOVE_BUTTON.TEXT_CONTENT;
-    this.removeButton.addEventListener(HTML.EVENT.CLICK, () => {
-      if (onRemove) onRemove(this);
-    });
-
     this.container.appendChild(this.textArea);
-    this.container.appendChild(this.removeButton);
   }
 
   getText() {

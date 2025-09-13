@@ -1,10 +1,9 @@
-export const TITLE = "Notes";
-
+export const TITLE = "4537 Lab 1";
 export const HTML = {
   ID: {
     APP: "app",
     TITLE: "title",
-    NOTE_LIST: "note-list",
+    NOTEPAD: "note-list",
   },
   CLASS: {
     CONTAINER: "container",
@@ -26,15 +25,28 @@ export const HTML = {
   },
 };
 
+export const NOTEPAD = {
+  TITLE: "Notes",
+  MODE: {
+    READ: "read",
+    WRITE: "write",
+  },
+  ADD_BUTTON: {
+    TEXT_CONTENT: "Add",
+  },
+};
+
 export const READER = {
   TEXT: "Reader",
   LINK: "reader.html",
+  NOTEPAD_MODE: "read",
 };
 
 export const WRITER = {
   TEXT: "Writer",
   LINK: "writer.html",
   WRITE_INTERVAL: 2000,
+  NOTEPAD_MODE: "write",
 };
 
 export const NOTE = {
@@ -47,11 +59,9 @@ export const NOTE = {
   REMOVE_BUTTON: {
     TEXT_CONTENT: "Remove",
   },
-};
-
-export const NOTE_LIST = {
-  ADD_BUTTON: {
-    TEXT_CONTENT: "Add",
+  MODE: {
+    READ: "read",
+    WRITE: "write",
   },
 };
 

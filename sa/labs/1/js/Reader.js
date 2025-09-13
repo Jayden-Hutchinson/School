@@ -1,22 +1,11 @@
-import { HTML, TITLE, NOTE_LIST } from "./env.js";
+import { HTML, READER, TITLE } from "./env.js";
 
 import { Note } from "./Note.js";
+import { Notepad } from "./Notepad.js";
 
 class Reader {
   constructor() {
-    this.notes = [];
-
-    this.container = document.getElementById(HTML.ID.APP);
-
-    this.title = document.createElement(HTML.ELEMENT.DIV);
-    this.title.id = HTML.ID.TITLE;
-    this.title.textContent = TITLE;
-
-    this.noteList = document.createElement(HTML.ELEMENT.UL);
-    this.noteList.id = HTML.ID.NOTE_LIST;
-
-    this.container.appendChild(this.title);
-    this.container.appendChild(this.noteList);
+    this.Notepad = new Notepad(READER.NOTEPAD_MODE);
   }
 
   loadNotes() {
