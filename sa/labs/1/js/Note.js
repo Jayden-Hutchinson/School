@@ -4,14 +4,12 @@ export class Note {
   /**
    *
    * @param {int} key - Note Key for local storage
-   * @param {function} onRemove - Callback to remove the note from its list
    * @param {string} text - Text content of the note
-   * @param {string} mode - Mode for Read or Write
    */
   constructor(key, text = null) {
     this.key = key;
-    this.container = document.createElement(HTML.ELEMENT.DIV);
-    this.container.className = HTML.CLASS.NOTE;
+    this.element = document.createElement(HTML.ELEMENT.DIV);
+    this.element.className = HTML.CLASS.NOTE;
 
     this.textArea = document.createElement(HTML.ELEMENT.TEXT_AREA);
     this.textArea.className = HTML.CLASS.NOTE_TEXT_AREA;
@@ -21,7 +19,7 @@ export class Note {
     this.textArea.addEventListener(HTML.EVENT.INPUT, () => {
       this.textArea.style.height = `${this.textArea.scrollHeight}px`;
     });
-    this.container.appendChild(this.textArea);
+    this.element.appendChild(this.textArea);
   }
 
   getText() {

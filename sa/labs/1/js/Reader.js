@@ -1,11 +1,16 @@
-import { HTML, READER, TITLE } from "./env.js";
+import { HTML } from "./env.js";
 
 import { Note } from "./Note.js";
 import { Notepad } from "./Notepad.js";
 
 class Reader {
   constructor() {
-    this.Notepad = new Notepad(READER.NOTEPAD_MODE);
+    this.element = document.getElementById(HTML.ID.APP);
+    this.notepad = new Notepad();
+    this.notepad.notes.forEach((note) => {
+      note.textArea.disabled = true;
+    });
+    this.element.appendChild(this.notepad.element);
   }
 
   loadNotes() {
