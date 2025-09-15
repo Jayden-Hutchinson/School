@@ -12,7 +12,7 @@ defmodule CardServer do
       diamonds: <<0x2666::utf8>>
     }
 
-    ranks = [2, 3, 4, 5, 6, 7, 8, 9, :J, :Q, :K, :A]
+    ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, :J, :Q, :K, :A]
 
     for rank <- ranks, suit <- Map.values(suits) do
       {rank, suit}
@@ -24,6 +24,20 @@ defmodule CardServer do
   end
 
   def count() do
+    send(__MODULE__, {:count, self()})
+
+    receive do
+      count -> count
+    end
+  end
+
+  def deal(n \\ 1) do
+    send(__MODULE__, {:deal, n, self()})
+
+    receive do
+      {:ok, dealt} -> {:ok, dealt}
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   def print() do
@@ -46,17 +60,32 @@ defmodule CardServer do
     end
   end
 
-  # def deal(n \\ 1) do
-  # end
-
   defp loop(deck) do
     receive do
       :shuffle ->
         loop(Enum.shuffle(deck))
 
+      {:count, from} ->
+        send(from, length(deck))
+        loop(deck)
+
       {:print, from} ->
         send(from, deck)
         loop(deck)
+
+      {:deal, n, from} when n < 0 ->
+        send(from, {:error, "Cannot deal a negative number of cards"})
+        loop(deck)
+
+      {:deal, n, from} ->
+        if n > length(deck) do
+          send(from, {:error, "Not enough cards left to deal #{n} cards"})
+          loop(deck)
+        else
+          {dealt, remaining} = Enum.split(deck, n)
+          send(from, {:ok, dealt})
+          loop(remaining)
+        end
     end
   end
 end
