@@ -1,0 +1,27 @@
+{
+  "name": "cytonet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css:build": "npx tailwindcss -i ./wwwroot/css/site.css -o ./wwwroot/css/styles.css --minify",
+    "run:docker": "docker build -t cytonet-image . && docker run --rm -p 8080:8080 --name cytonet-container cytonet-image"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kinexus-Bioinformatics-Corporation/CytoNET.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kinexus-Bioinformatics-Corporation/CytoNET/issues"
+  },
+  "homepage": "https://github.com/Kinexus-Bioinformatics-Corporation/CytoNET#readme",
+  "description": "",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17"
+  }
+}

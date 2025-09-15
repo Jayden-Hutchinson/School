@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CytoNET</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+    <style>
+        .graph {
+            background-color: black;
+        }
+
+        .node {
+            transition: all 0.2s;
+        }
+
+        .node:hover {
+            filter: brightness(1.2);
+        }
+
+        .link {
+            stroke-opacity: 0.6;
+            stroke-width: 2px;
+        }
+
+        .label {
+            pointer-events: none;
+            user-select: none;
+            font-size: 12px;
+            fill: #000000;
+        }
+
+        button:focus {
+            outline: 2px solid #4299e1;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body
+    style=" display: flex; flex-direction: column; justify-items: center; align-items: center; background-color: #121226; margin: 8px; font-family: sans-serif; font-size: 16px;">
+    <header style="width: 77%;">
+        <img style="width: 100%;" src="~/images/25MR22_Kinector-CytoNET_Banner.jpg" alt="Kinector's Banner">
+        @* <nav
+            class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CytoNET_project</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                                asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav> *@
+        <div style="display: flex; justify-content: space-between; padding: 15px 25px;">
+            <a class="resourcesLink" href="http://www.kinatlas.ca:8080/KinAtlas" target="_blank"
+                rel="noopener noreferrer">KinATLAS</a>
+            <a class="resourcesLink" href="http://www.transcriptonet.ca/" target="_blank"
+                rel="noopener noreferrer">TranscriptoNET</a>
+            <a class="resourcesLink" href="http://www.phosphonet.ca/" target="_blank"
+                rel="noopener noreferrer">PhosphoNET</a>
+            <a class="resourcesLink" href="http://www.onconet.ca/" target="_blank" rel="noopener noreferrer">OncoNET</a>
+            <a class="resourcesLink" href="http://www.kinasenet.ca/" target="_blank"
+                rel="noopener noreferrer">KinaseNET</a>
+            <a class="resourcesLink" href="http://www.drugkinet.ca/" target="_blank"
+                rel="noopener noreferrer">DrugKiNET</a>
+            <a class="resourcesLink" href="http://www.drugpronet.ca/" target="_blank"
+                rel="noopener noreferrer">DrugProNET</a>
+            <a class="resourcesLink" href="http://www.kinet-am.ca/" target="_blank"
+                rel="noopener noreferrer">KiNET-AM</a>
+            <a class="resourcesLink" href="http://www.kinector.ca/" target="_blank"
+                rel="noopener noreferrer">KiNECTOR</a>
+        </div>
+    </header>
+    <div style="width: 77%;" class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+    </footer>
+    <style>
+        .resourcesLink {
+            text-decoration: none;
+            color: #7b9ecc;
+            font-weight: bold;
+        }
+    </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.0/jQuery.print.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

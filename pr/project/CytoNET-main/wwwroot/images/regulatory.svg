@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30.8 15.45">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="15.44" y1="2.51" x2="15.34" y2="15.91" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5eb6cd"/>
+      <stop offset=".05" stop-color="#519aad"/>
+      <stop offset=".16" stop-color="#37616c"/>
+      <stop offset=".25" stop-color="#24373c"/>
+      <stop offset=".32" stop-color="#181d1f"/>
+      <stop offset=".36" stop-color="#141414"/>
+      <stop offset=".41" stop-color="#161819"/>
+      <stop offset=".48" stop-color="#1c2628"/>
+      <stop offset=".55" stop-color="#263c42"/>
+      <stop offset=".63" stop-color="#345c66"/>
+      <stop offset=".71" stop-color="#478494"/>
+      <stop offset=".79" stop-color="#5db4cb"/>
+      <stop offset=".8" stop-color="#5eb6cd"/>
+    </linearGradient>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <polygon class="cls-1" points="21.78 0 9.02 0 0 4.53 0 10.92 9.02 15.45 21.78 15.45 30.8 10.92 30.8 4.53 21.78 0"/>
+  </g>
+</svg>

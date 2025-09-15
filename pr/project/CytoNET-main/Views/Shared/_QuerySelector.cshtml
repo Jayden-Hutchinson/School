@@ -1,0 +1,44 @@
+<div class="query-selector-container col-span-3 flex justify-between p-1 align-middle py-3"
+    style="border: 1px solid #4800C1;">
+    <span class="text-[#738569] font-bold ml-4">Select type of query desired</span>
+
+    <div class="query-selector-container">
+        <select id="kinaseQuerySelector" class="rounded cursor-pointer text-black w-72">
+            <option value="" class="hidden" selected disabled>Click to view options</option>
+            <option value="substrate_focused_query">Substrate-focused Kinase Interactions</option>
+            <option value="kinase_focused_query">Kinase-focused Substrate Interactions</option>
+            <option value="kinase_protein_connection_query">Kinase-Phosphoprotein Connection Interactions</option>
+            <option value="kinase_protein_modification_query">Extracellular Mediator and Receptor Post-translational
+                Modifications</option>
+            <option value="kinase_protein_interactions_query">Receptor-focused Protein and Small Molecules Interactions
+            </option>
+            <option value="kinase_tissue_distribution_query">Extracellular Mediator and Receptor Cell/Tissue/Organ
+                Distribution</option>
+        </select>
+    </div>
+
+    <div class="hidden-links">
+        <a id="substrate_focused_query" href="http://www.kinector.ca/substrate_focused_query.html"></a>
+        <a id="kinase_focused_query" href="http://www.kinector.ca/kinase_focused_query.html"></a>
+        <a id="kinase_protein_connection_query" href="http://www.kinector.ca/kinase_protein_connection_query.html"></a>
+        <a id="kinase_protein_modification_query" asp-controller="ProteinModification" asp-action="Query"></a>
+        <a id="kinase_protein_interactions_query" asp-controller="ProteinInteraction" asp-action="Query"></a>
+        <a id="kinase_tissue_distribution_query" asp-controller="TissueDistribution" asp-action="Query"></a>
+    </div>
+
+    <span class="text-[#8781BD] font-bold ml-4">Updated April 2025</span>
+    <span class="mr-4">
+        <a asp-controller="Home" asp-action="Index" class="text-[#FFC721] font-bold no-underline">Home</a> |
+        <a href="http://www.kinexus.ca" class="text-[#FFC721] font-bold no-underline">Kinexus</a> |
+        <a href="http://www.kinexus.ca/contact/contact.html" class="text-[#FFC721] font-bold no-underline">Contact</a> |
+        <a asp-controller="Home" asp-action="Credits" class="text-[#FFC721] font-bold no-underline">Credits</a>
+    </span>
+    <script>
+        document.getElementById('kinaseQuerySelector').addEventListener('change', function () {
+            const selectedValue = this.value;
+            if (selectedValue) {
+                document.getElementById(selectedValue).click();
+            }
+        });
+    </script>
+</div>

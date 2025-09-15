@@ -1,0 +1,242 @@
+<div class="mx-auto relative w-full">
+
+    <div class="grid grid-cols-[3%_13%_84%] w-full" style="border: 1px solid #4800C1;">
+        <partial name="_QuerySelector" />
+
+        <div style="border: 1px solid #4800C1;"></div>
+
+        <div class="pb-4 grid grid-rows-[200px_auto_auto] gap-8 relative" style="border: 1px solid #4800C1;">
+            <div class="text-right pr-4 pt-4">
+                <p class="text-[#8781BD] font-bold m-0">Query Type</p>
+            </div>
+            <div class="text-right pr-4 pt-11">
+                <p class="text-[#8781BD] font-bold m-0">Filters</p>
+            </div>
+            <span class="text-center absolute bottom-5 flex justify-center w-full">
+                <a href="http://www.kinector.ca" class="text-[#FFC721] font-bold no-underline">Home</a> |
+                <a href="#topOfPage" class="text-[#FFC721] font-bold no-underline">Top</a>
+            </span>
+        </div>
+
+        <div class="pl-4 grid grid-cols-[45%_45%] gap-x-12" style="border: 1px solid #4800C1;">
+            <div class="pt-4">
+                <b class="text-[#FFC721]">Receptor-focused Protein and Small Molecule Interactions</b>
+                <p class="text-[#738569] mt-2 mb-7">
+                    This query result identifies extracellular mediators that are targeted by
+                    a selected receptor as well as cellular proteins that directly interact
+                    with the receptor to regulate its intracellular signalling. These
+                    associations are based on experimental studies as documented in
+                    the String-Db, Uniprot and other molecular interaction databases.
+                </p>
+            </div>
+
+            <div class="mt-4 grid">
+                <a href="http://www.kinexusproducts.ca" target="_blank" rel="noopener noreferrer">
+                    <img src="~/images/WebsiteBannerAds-1-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-2-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-3-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-4-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-5-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-6-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-7-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-8-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-9-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-10-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-11-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-12-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-13-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-14-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-15-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-16-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-17-min.jpg" class="w-10/12 h-auto">
+                </a>
+            </div>
+
+            <div class="grid gap-8">
+                <div>
+                    <b class="text-[#FFC721]">Step 1 – Protein or Small Molecule Specification</b>
+                    <p class="text-[#738569] mt-2">
+                        Enter the first few characters for the name or UniProt ID of the protein or the name or CAS
+                        ID of the small molecular mediator and then select the desired search term from the provided
+                        drop down list (required).
+                    </p>
+                    <div class="relative">
+                        <input id="proteinInput" type="text" placeholder="Type in at least 3 letters of search term"
+                            class="rounded w-80 mt-2 pl-3">
+                        <div id="autocompleteResults"
+                            class="absolute z-10 bg-white w-80 mt-1 rounded shadow-lg hidden max-h-60 overflow-y-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <b class="text-[#FFC721]">Step 3 - Map Generation</b>
+                    <p class="text-[#738569]">
+                        Click on one of the boxes below to produce a customized receptor interaction map or to reset
+                        the
+                        parameters.
+                    </p>
+                    <button type="submit" class="px-4 rounded cursor-pointer w-fit py-2 mr-8 mt-4 bg-white text-sm "
+                        id="generateMapBtn">
+                        <a href=""></a>
+                        Generate Map
+                    </button>
+                    <button class="px-4 rounded cursor-pointer w-fit py-2 bg-white text-sm" id="resetBtn">Reset</button>
+                </div>
+            </div>
+
+            <div>
+                <b class="text-[#FFC721]">Step 2 - Display Parameters Specification</b>
+                <p class="text-[#738569]">
+                    Boxes that are marked are activated to display.
+                    Click on boxes to change status.
+                </p>
+                <div class="border border-[#CDCDCD] p-2 text-white">
+                    <label class="cursor-pointer block">
+                        <input id="stimulatory-interactions" type="checkbox" checked class="mr-2">Show stimulatory
+                        interactions
+                    </label>
+                    <label class="cursor-pointer block">
+                        <input id="inhibitory-interactions" type="checkbox" checked class="mr-2">Show inhibitory
+                        interactions
+                    </label>
+                    <label class="cursor-pointer block">
+                        <input id="undefined-interactions" type="checkbox" checked class="mr-2">Show undefined
+                        interactions
+                    </label>
+                    <label class="cursor-pointer block">
+                        <input id="show-uniprot-id" type="checkbox" checked class="mr-2">Show UniProt ID
+                    </label>
+                    <label class="cursor-pointer block">
+                        <input id="black-background" type="checkbox" checked class="mr-2">Show black background
+                    </label>
+                </div>
+            </div>
+
+            <span class="text-[#738569] font-bold mt-5 col-span-2 flex justify-center mb-2">Copyright 2025 Kinexus
+                Bioinformatics
+                Corporation</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const proteinInput = document.getElementById('proteinInput');
+        const autocompleteResults = document.getElementById('autocompleteResults');
+        const generateMapBtn = document.getElementById('generateMapBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let selectedProteinId = null;
+
+        function debounce(func, delay) {
+            let timeout;
+            return function () {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        proteinInput.addEventListener('input', debounce(async function () {
+            const searchTerm = proteinInput.value.trim();
+
+            if (searchTerm.length < 3) {
+                autocompleteResults.classList.add('hidden');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/ProteinInteraction/SearchProteins?term=${encodeURIComponent(searchTerm)}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.status);
+                }
+
+                const proteins = await response.json();
+                displayAutocompleteResults(proteins);
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            }
+        }, 300));
+
+        function displayAutocompleteResults(proteins) {
+            autocompleteResults.innerHTML = '';
+
+            if (!proteins || proteins.length === 0) {
+                autocompleteResults.classList.add('hidden');
+                return;
+            }
+
+            proteins.forEach(protein => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'p-2 hover:bg-gray-100 cursor-pointer text-black';
+
+                let displayText = protein.uniprotId;
+                if (protein.shortName) {
+                    displayText += ` - ${protein.shortName}`;
+                }
+
+                resultItem.textContent = displayText;
+
+                resultItem.addEventListener('click', function () {
+                    proteinInput.value = displayText;
+                    selectedProteinId = protein.uniprotId;
+                    console.log("Selected protein with ID:", selectedProteinId);
+                });
+
+                autocompleteResults.appendChild(resultItem);
+            });
+
+            autocompleteResults.classList.remove('hidden');
+        }
+
+        autocompleteResults.addEventListener('click', function (event) {
+            setTimeout(() => {
+                autocompleteResults.classList.add('hidden');
+            }, 100);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!proteinInput.contains(event.target) && !autocompleteResults.contains(event.target)) {
+                autocompleteResults.classList.add('hidden');
+            }
+        });
+
+        resetBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            console.log("Reset clicked");
+            proteinInput.value = '';
+            selectedProteinId = null;
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        });
+
+        generateMapBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            if (!selectedProteinId) {
+                alert('Please select a protein from the dropdown list first.');
+                return;
+            }
+
+            const showStimulatory = document.querySelector('#stimulatory-interactions').checked;
+            const showInhibitory = document.querySelector('#inhibitory-interactions').checked;
+            const showUndefined = document.querySelector('#undefined-interactions').checked;
+            const showUniProtId = document.querySelector('#show-uniprot-id').checked;
+            const showBlackBackground = document.querySelector('#black-background').checked;
+
+            const url = `/ProteinInteraction/Result/${encodeURIComponent(selectedProteinId)}` +
+                `?showStimulatory=${showStimulatory}` +
+                `&showInhibitory=${showInhibitory}` +
+                `&showUndefined=${showUndefined}` +
+                `&showUniProtId=${showUniProtId}` +
+                `&showBlackBackground=${showBlackBackground}`;
+
+            window.location.href = url;
+        });
+    });
+</script>

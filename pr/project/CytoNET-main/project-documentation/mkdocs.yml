@@ -1,0 +1,18 @@
+site_name: CytoNET Project
+nav:
+  - Home: "index.md"
+  - Getting Started: "getting-started.md"
+  - Database:
+      - Schema: "database/schema.md"
+  - Importing csv's:
+      - Setup: "csv-import/setup.md"
+      - Usage: "csv-import/usage.md"
+      - Troubleshooting: "csv-import/troubleshooting.md"
+  - Help pls: "help.md"
+theme:
+  name: terminal
+  palette: dark
+  features:
+    # - navigation.side.toc.hide
+markdown_extensions:
+  - def_list

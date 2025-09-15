@@ -34,13 +34,12 @@ export const NOTEPAD = {
 
 export const READER = {
   LINK: "reader.html",
-  NOTEPAD_MODE: "read",
+  READ_INTERVAL: 2000,
 };
 
 export const WRITER = {
   LINK: "writer.html",
   WRITE_INTERVAL: 2000,
-  NOTEPAD_MODE: "write",
 };
 
 export const NOTE = {

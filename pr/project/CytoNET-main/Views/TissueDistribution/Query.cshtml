@@ -1,0 +1,218 @@
+@{
+ViewData["Title"] = "Extracellular Mediator and Receptor Cell/Tissue/Organ Distribution";
+Layout = "_Layout";
+}
+
+<div id="topOfPage" class="mx-auto relative w-full">
+    <div class="grid grid-cols-[3%_13%_84%] w-full" style="border: 1px solid #4800C1;">
+        <partial name="_QuerySelector" />
+
+        <div style="border: 1px solid #4800C1;"></div>
+
+        <div class="pb-4 grid grid-rows-[200px_auto_auto] gap-8 relative" style="border: 1px solid #4800C1;">
+            <div class="text-right pr-4 pt-4">
+                <p class="text-[#8781BD] font-bold m-0">Query Type</p>
+            </div>
+            <div class="text-right pr-4 place-content-center">
+            </div>
+            <span class="text-center absolute bottom-5 flex justify-center w-full">
+                <a href="http://www.kinector.ca" class="text-[#FFC721] font-bold no-underline">Home</a> |
+                <a href="#topOfPage" class="text-[#FFC721] font-bold no-underline">Top</a>
+            </span>
+        </div>
+
+        <div class="pl-4 grid grid-cols-[45%_45%] gap-x-12" style="border: 1px solid #4800C1;">
+            <div class="pt-4">
+                <b class="text-[#FFC721]">Extracellular Mediator and Receptor Cell/Tissue/Organ Distribution</b>
+                <p class="text-[#738569] mt-2 mb-7">
+                    This query result identifies the human cells, tissues or organs in which the small molecule (and
+                    their biosynthetic enzyme) and protein extracellular mediators are produced as well as the locations
+                    of the receptors for these mediators. These assignments are based on gene expression studies as
+                    documented in TranscriptoNET, Uniprot, BeeGee, Expression Atlas, and Gene Visible. Note that not all
+                    sites of mediator production and receptor location are listed, and some of the molecules and
+                    proteins may be produced in additional sites and even more widely distributed.
+                </p>
+            </div>
+
+            <div class="mt-4 grid">
+                <a href="http://www.kinexusproducts.ca" target="_blank" rel="noopener noreferrer">
+                    <img src="~/images/WebsiteBannerAds-1-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-2-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-3-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-4-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-5-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-6-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-7-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-8-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-9-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-10-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-11-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-12-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-13-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-14-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-15-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-16-min.jpg" class="w-10/12 h-auto">
+                    <img src="~/images/WebsiteBannerAds-17-min.jpg" class="w-10/12 h-auto">
+                </a>
+            </div>
+
+            <div class="grid gap-8">
+                <div>
+                    <b class="text-[#FFC721]">Step 1 - Protein Specification</b>
+                    <p class="text-[#738569] mt-2">
+                        Enter the first few characters for the name, UniProt (for protein) or CAS (for small molecule)
+                        ID of the extracellular mediator or receptor and then select the desired search term from the
+                        provided drop down list (required).
+                    </p>
+                    <div class="relative">
+                        <input id="proteinInput" type="text" placeholder="Type in at least 3 letters of search term"
+                            class="rounded w-80 mt-2 pl-3">
+                        <div id="autocompleteResults"
+                            class="absolute z-10 bg-white w-80 mt-1 rounded shadow-lg hidden max-h-60 overflow-y-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <b class="text-[#FFC721]">Step 2 – Distribution List Generation</b>
+                    <p class="text-[#738569]">
+                        Click on one of the boxes below to produce a protein tissue distribution list or to reset the
+                        parameters
+                    </p>
+                    <button class="px-4 rounded cursor-pointer w-fit py-2 mr-8 mt-4 bg-white text-sm"
+                        id="generateMapBtn">Generate List</button>
+                    <button class="px-4 rounded cursor-pointer w-fit py-2 bg-white text-sm" id="resetBtn">Reset</button>
+                </div>
+            </div>
+
+            <span class="text-[#738569] font-bold mt-5 col-span-2 flex justify-center mb-2">Copyright 2025 Kinexus
+                Bioinformatics Corporation</span>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const proteinInput = document.getElementById('proteinInput');
+        const autocompleteResults = document.getElementById('autocompleteResults');
+        const generateMapBtn = document.getElementById('generateMapBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let selectedUniprotId = null;
+        let isSelectingItem = false;
+
+        proteinInput.addEventListener('input', debounce(async function () {
+            const searchTerm = proteinInput.value.trim();
+
+            if (searchTerm.length < 3) {
+                autocompleteResults.classList.add('hidden');
+                selectedUniprotId = null;
+                return;
+            }
+
+            try {
+                const response = await fetch(`/TissueDistribution/SearchProteins?term=${encodeURIComponent(searchTerm)}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.status);
+                }
+
+                const proteins = await response.json();
+                console.log('Search results:', proteins);
+                displayAutocompleteResults(proteins);
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+            }
+        }, 300));
+
+        function displayAutocompleteResults(proteins) {
+            autocompleteResults.innerHTML = '';
+
+            if (!proteins || proteins.length === 0) {
+                autocompleteResults.classList.add('hidden');
+                return;
+            }
+
+            proteins.forEach(protein => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'p-2 hover:bg-gray-100 cursor-pointer text-black';
+
+                let displayText = protein.uniprotIdorCas;
+                if (protein.shortName) {
+                    displayText += ` - ${protein.shortName};`;
+                }
+                if (protein.mediatorCompoundUniprotId) {
+                    displayText += ` ${protein.mediatorCompoundUniprotId}`
+                }
+                if (protein.mediatorCompoundShortName) {
+                    displayText += ` - ${protein.mediatorCompoundShortName}`
+                }
+
+                resultItem.textContent = displayText;
+
+                resultItem.addEventListener('mousedown', function (e) {
+                    e.preventDefault();
+
+                    isSelectingItem = true;
+
+                    proteinInput.value = displayText;
+                    selectedUniprotId = protein.uniprotIdorCas;
+                    console.log("Selected tissue distribution with ID:", selectedUniprotId);
+
+                    setTimeout(() => {
+                        autocompleteResults.classList.add('hidden');
+                        isSelectingItem = false;
+                    }, 100);
+                });
+
+                autocompleteResults.appendChild(resultItem);
+            });
+
+            autocompleteResults.classList.remove('hidden');
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!isSelectingItem && !proteinInput.contains(event.target) && !autocompleteResults.contains(event.target)) {
+                autocompleteResults.classList.add('hidden');
+            }
+        });
+
+        proteinInput.addEventListener('focus', function () {
+            if (proteinInput.value.trim().length >= 3) {
+                autocompleteResults.classList.remove('hidden');
+            }
+        });
+
+        generateMapBtn.addEventListener('click', function () {
+            console.log("Generate Map clicked, selectedUniprotId:", selectedUniprotId);
+            if (selectedUniprotId) {
+                window.location.href = `/TissueDistribution/Result/${selectedUniprotId}`;
+            } else {
+                alert('Please select a protein from the dropdown list first.');
+            }
+        });
+
+        function debounce(func, delay) {
+            let timeout;
+            return function () {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+
+        resetBtn.addEventListener('click', function () {
+            console.log("Reset clicked");
+            document.getElementById('proteinInput').value = '';
+
+            selectedUniprotId = null;
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        });
+    });
+</script>
+}

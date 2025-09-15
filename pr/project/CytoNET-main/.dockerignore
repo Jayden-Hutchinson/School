@@ -1,0 +1,34 @@
+# Build Results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio Files
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Dev Environment
+.vscode/
+
+# Version Control
+.git/
+.gitignore
+
+# Docker Files
+Dockerfile
+.dockerignore
+
+# Logs & Db
+.log
+
+# Environment Files
+.env
+*.env
+appsettings.*.json
+
+# Other Files
+*.md

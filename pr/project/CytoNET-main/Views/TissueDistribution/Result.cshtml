@@ -1,0 +1,326 @@
+@model CytoNET.Models.TissueDistributionResultViewModel
+@{
+ViewData["Title"] = "Protein Cell/Tissue/Organ Distribution";
+Layout = "_Layout";
+}
+
+<div id="topOfPage" class="w-full">
+    <!-- Top navigation/query selector bar -->
+    <div class="w-full" style="border: 1px solid #4800C1; background-color: #070624;">
+        <partial name="_QuerySelector" />
+
+
+        <!-- Main content grid -->
+        <div class="grid grid-cols-[200px_1fr] w-full" style="border: 1px solid #4800C1; background-color: #070624;">
+            <!-- Left sidebar -->
+            <div style="border: 1px solid #4800C1;">
+                <div class="h-full flex flex-col py-4">
+                    <div class="px-4">
+                        <p class="font-bold mb-6 text-[#8781BD]">General Info</p>
+                        <div id="labelContainer" class="grid grid-cols-1 text-white">
+                            <p class="modificationLabel py-2 text-[#8781BD]">Type</p>
+                            <p class="modificationLabel py-2 text-[#8781BD]">Short Name</p>
+                            <p class="modificationLabel py-2 text-[#8781BD]">Full Name</p>
+                            <p class="modificationLabel py-2 text-[#8781BD]">Alias</p>
+                            <p class="modificationLabel py-2 text-[#8781BD]">UniProt ID</p>
+                            <p class="modificationLabel py-2 text-[#8781BD]">PhosphoSite ID</p>
+                            <p class="modificationLabel py-2 text-[#8781BD]">Description</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto mb-8 flex justify-center gap-2">
+                        <a href="/" class="text-[#FFC721] font-bold no-underline">Home</a> |
+                        <a href="#topOfPage" class="text-[#FFC721] font-bold no-underline">Top</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content area -->
+            <div class="text-white p-4" style="border: 1px solid #4800C1;">
+                <div class="flex">
+                    <div class="mb-6 border-b border-[#4800C1] pb-4 w-full">
+                        <h2 class="text-[#FFC721] text-xl font-bold">Protein Cell/Tissue/Organ Distribution</h2>
+                        <p class="text-[#738569] mt-2">
+                            This query result identifies the human cells, tissues or organs in which the small molecule
+                            (and
+                            their biosynthetic enzyme) and protein extracellular mediators are produced as well as the
+                            locations
+                            of the receptors for these
+                            mediators. Only the most commonly recognized production sites and receptor location are
+                            listed,
+                            and
+                            some of the molecules and proteins may be
+                            produced in additional sites and even more widely distributed.
+                        </p>
+                    </div>
+                    <div class="mb-6 border-b border-[#4800C1] pb-4 pl-2 flex flex-col items-center justify-center">
+                        <a href="http://www.kinexusproducts.ca" target="_blank" rel="noopener noreferrer"
+                            class="flex justify-center mb-2">
+                            <img src="~/images/WebsiteBannerAds-1-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-2-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-3-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-4-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-5-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-6-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-7-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-8-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-9-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-10-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-11-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-12-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-13-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-14-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-15-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-16-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-17-min.jpg" class="w-10/12 h-auto">
+                        </a>
+                    </div>
+                </div>
+                <h2 class="text-[#FFC721] text-xl font-bold pb-2">Protein Information</h2>
+                <div id="dataContainer">
+                    <p class="text-gray-300 modificationData py-2">@Model.Type</p>
+                    <p class="text-gray-300 modificationData py-2">@Model.ShortName</p>
+                    <p class="text-gray-300 modificationData py-2">@Model.FullName</p>
+                    <p class="text-sm text-gray-300 modificationData py-2">@Model.Alias</p>
+                    <a target="_blank" rel="noopener noreferrer"
+                        href="https://www.uniprot.org/uniprotkb/@Model.UniprotId/entry">
+                        <p class="py-2 modificationData">@Model.UniprotId</p>
+                    </a>
+                    <a target="_blank" rel="noopener noreferrer"
+                        href="https://www.phosphosite.org/proteinAction.action?id=@Model.PhosphoSiteId&showAllSites=true">
+                        <p class="py-2 modificationData">@Model.PhosphoSiteId</p>
+                    </a>
+                    <p class="text-sm text-gray-300 modificationData py-2">@Model.FunctionDescription</p>
+                </div>
+
+
+                <div class="mb-6">
+                    <p class="text-[#738569]">
+                        Additional queries can be performed to identify alternative mediators that binds to the same
+                        receptor or for other receptors that binds the same mediator. These can be identified with the
+                        Receptor-focused Protein and Small Molecule Interaction Query. Note that for organ/tissue/cell
+                        distribution for small molecule extracellular mediators, the enzyme that generates the product
+                        is used as a proxy.
+                    </p>
+                </div>
+
+                <div id="distributionContent" class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-[#FFC721] font-bold mb-2">
+                            @(Model.IsMediator ? "Extracellular Mediator Sources" :
+                            Model.IsMediatorEnzyme ? "Mediator Enzyme Locations" :
+                            Model.IsReceptor ? "Receptor Locations" :
+                            "Protein Locations")
+                        </h3>
+                        <div class="bg-[#1e1e2f] p-4 rounded">
+                            <div class="text-center mb-4 border-b border-[#4800C1] pb-2">
+                                @if (!string.IsNullOrEmpty(Model.ShortName))
+                                {
+                                <h4 class="text-[#FFC721] mb-1">@Model.ShortName</h4>
+                                }
+                                <p class="text-gray-200">
+                                    UniProt ID<br />@Model.UniprotId
+                                </p>
+                                @if (Model.SmallMolecule != null && !string.IsNullOrEmpty(Model.SmallMolecule.CasNo))
+                                {
+                                <p class="text-gray-200">
+                                    CAS Number<br />@Model.SmallMolecule.CasNo
+                                </p>
+                                }
+                            </div>
+
+                            <div class="text-gray-400">
+                                <h5 class="text-[#FFC721] mb-2">Organ/Tissue/Cell</h5>
+                                @if (Model.HasOrganOrTissues)
+                                {
+                                <ul class="list-disc pl-4">
+                                    @foreach (var organ in Model.GetTissueOrgans())
+                                    {
+                                    <li class="mt-2">@if (organ.IsBold)
+                                        {
+                                        <strong class="text-gray-200">@organ.OrganName</strong>
+                                        }
+                                        else
+                                        {
+                                        @organ.OrganName
+                                        }
+                                    </li>
+                                    }
+                                </ul>
+                                }
+                                else
+                                {
+                                <p>No tissue/organ data available</p>
+                                }
+                            </div>
+
+                            @if (Model.SmallMolecule != null)
+                            {
+                            <div class="mt-4 border-t border-[#4800C1] pt-4 text-gray-400">
+                                <h5 class="text-[#FFC721] mb-2">Molecule Type</h5>
+                                <p>@Model.GetMoleculeTypeDescription()</p>
+
+                                @if (Model.IsHormone || Model.IsCytokine || Model.IsNeurotransmitter ||
+                                Model.IsGrowthFactor)
+                                {
+                                <div class="mt-2 text-gray-400">
+                                    <h5 class="text-[#FFC721] mb-2">Classification</h5>
+                                    @if (Model.IsHormone)
+                                    {
+                                    <p>Hormone</p>
+                                    }
+                                    @if (Model.IsCytokine)
+                                    {
+                                    <p>Cytokine</p>
+                                    }
+                                    @if (Model.IsNeurotransmitter)
+                                    {
+                                    <p>Neurotransmitter</p>
+                                    }
+                                    @if (Model.IsGrowthFactor)
+                                    {
+                                    <p>Growth Factor</p>
+                                    }
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <h3 class="text-[#FFC721] font-bold mb-2">
+                            @(Model.IsReceptor ? "Receptor Protein Locations" :
+                            "Related Protein Locations")
+                        </h3>
+                        <div class="bg-[#1e1e2f] p-4 rounded">
+                            <div class="text-center mb-4 border-b border-[#4800C1] pb-2">
+                                @if (!string.IsNullOrEmpty(Model.ReceptorName))
+                                {
+                                <h4 class="text-[#FFC721] mb-1">@Model.ReceptorName</h4>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.ReceptorUniprotId))
+                                {
+                                <p class="text-gray-200">
+                                    @(Model.ReceptorUniprotId != null && Model.ReceptorUniprotId.Contains("-") ? "CASNo"
+                                    : "UniProt ID")<br />@Model.ReceptorUniprotId
+                                </p>
+                                }
+                            </div>
+
+                            <div class="text-gray-400">
+                                <h5 class="text-[#FFC721] mb-2">Organ/Tissue/Cell</h5>
+                                @if (Model.ReceptorOrgans != null && Model.ReceptorOrgans.Any())
+                                {
+                                <ul class="list-disc pl-4">
+                                    @foreach (var organ in Model.ReceptorOrgans)
+                                    {
+                                    <li class="mt-2">@if (organ.IsBold)
+                                        {
+                                        <strong class="text-gray-200">@organ.OrganName</strong>
+                                        }
+                                        else
+                                        {
+                                        @organ.OrganName
+                                        }
+                                    </li>
+                                    }
+                                </ul>
+                                }
+                                else
+                                {
+                                <p>No related organ/tissue data available</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button id="downloadBtn" class="bg-gray-700 hover:bg-gray-600 text-white py-1 px-4 rounded">
+                        Download PDF
+                    </button>
+                    <p class="text-[#738569] mt-4">Copyright 2025 Kinexus Bioinformatics Corporation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <script>
+        const downloadBtn = document.getElementById('downloadBtn')
+
+        downloadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            $("#distributionContent").print();
+        })
+
+        document.addEventListener('DOMContentLoaded', function () {
+            function setEqualHeightsAndAlign() {
+                const labelContainer = document.getElementById('labelContainer');
+                const dataContainer = document.getElementById('dataContainer');
+
+                if (!labelContainer || !dataContainer) return;
+
+                labelContainer.style.marginTop = '0';
+
+                void labelContainer.offsetHeight;
+
+                const labelRect = labelContainer.getBoundingClientRect();
+                const dataRect = dataContainer.getBoundingClientRect();
+
+                const offset = dataRect.top - labelRect.top;
+
+                if (Math.abs(offset) > 0) {
+                    labelContainer.style.marginTop = `${offset + 24}px`;
+                }
+
+                const labelItems = labelContainer.querySelectorAll('.modificationLabel');
+                const dataItems = dataContainer.querySelectorAll('.modificationData, p');
+
+                if (labelItems.length === dataItems.length) {
+                    labelItems.forEach(item => item.style.height = 'auto');
+                    dataItems.forEach(item => item.style.height = 'auto');
+
+                    labelItems.forEach((labelItem, index) => {
+                        const dataItem = dataItems[index];
+                        const labelHeight = labelItem.offsetHeight;
+                        const dataHeight = dataItem.offsetHeight;
+                        const maxHeight = Math.max(labelHeight, dataHeight);
+
+                        labelItem.style.height = `${maxHeight}px`;
+                        dataItem.style.height = `${maxHeight}px`;
+                    });
+                }
+            }
+
+            function alignLegendWithGraph() {
+                const legend = document.getElementById('legendImage');
+                const graphSection = document.getElementById('graphSection');
+
+                if (legend && graphSection) {
+                    const graphRect = graphSection.getBoundingClientRect();
+                    const legendRect = legend.getBoundingClientRect();
+
+                    const offset = graphRect.top - legendRect.top;
+                    if (offset > 0) {
+                        legend.style.marginTop = `${offset}px`;
+                    }
+                }
+            }
+
+            setEqualHeightsAndAlign();
+            alignLegendWithGraph();
+
+            window.addEventListener('resize', function () {
+                document.getElementById('labelContainer').style.marginTop = '0';
+                document.getElementById('legendImage').style.marginTop = '0';
+
+
+                setEqualHeightsAndAlign();
+                alignLegendWithGraph();
+
+            });
+        });
+    </script>
+    }

@@ -17,7 +17,7 @@ class Writer {
       : messages.lastSaved;
 
     this.notepad = new Notepad();
-    console.log(this.notepad.notes);
+
     this.notepad.notes.forEach((note) => {
       const removeButton = document.createElement(HTML.ELEMENT.BUTTON);
       removeButton.className = HTML.CLASS.BUTTON;
@@ -25,6 +25,7 @@ class Writer {
       removeButton.addEventListener(HTML.EVENT.CLICK, () => {
         this.removeNote(note);
         note.element.appendChild(removeButton);
+        console.log(this.notepad.notes);
       });
       note.element.appendChild(removeButton);
     });
@@ -49,20 +50,34 @@ class Writer {
       note.element.appendChild(removeButton);
     });
 
+    this.backButton = document.createElement(HTML.ELEMENT.BUTTON);
+    this.backButton.className = HTML.CLASS.BUTTON;
+    this.backButton.textContent = messages.backButton;
+    this.backButton.addEventListener(HTML.EVENT.CLICK, () => {
+      history.back();
+    });
+
     this.element.appendChild(this.lastSaved);
     this.element.appendChild(this.notepad.element);
     this.element.appendChild(this.addButton);
+    this.element.appendChild(this.backButton);
 
     setInterval(() => this.saveNotes(), WRITER.WRITE_INTERVAL);
   }
 
   removeNote(note) {
     note.element.remove();
-    localStorage.removeItem(note.key);
-
     if (this.notepad.notes) {
+      for (let i = 0; i <= localStorage.length + 1; i++) {
+        localStorage.removeItem(i);
+      }
+
+      this.notepad.notes.splice(note.key, 1);
+      console.log(this.notepad.notes);
+
       this.notepad.notes.forEach((note, index) => {
         note.key = index;
+        localStorage.setItem(note.key, note.getText());
       });
     }
   }

@@ -1,0 +1,491 @@
+@model ProteinInteractionViewModel
+@using Newtonsoft.Json
+
+
+<div class="w-full mx-auto bg-[#121226] text-gray-300">
+    <div class="" style="border: 1px solid #4800C1;">
+        <partial name="_QuerySelector" />
+
+        @* Main Grid Layout *@
+        <div class="flex">
+            @* Left Sidebar *@
+            <div class="col-span-2 py-4" style="border: 1px solid #4800C1;">
+                <div class="text-right px-4 text-[#8781BD] ">
+                    <p class="font-bold mb-6">General Info</p>
+                    <div id="labelContainer" class="text-right text-[#8781BD]">
+                        @if (Model.InitiatorIsSmallMolecule())
+                        {
+                        <p class="text-[#FFC721] interactionLabel">Small Molecule</p>
+                        <p class="interactionLabel py-2">Short Name</p>
+                        <p class="interactionLabel py-2">Full Name</p>
+                        <p class="interactionLabel py-2">Alias</p>
+                        <p class="interactionLabel py-2">MW</p>
+                        <p class="interactionLabel py-2">CAS ID</p>
+                        <p class="text-[#FFC721] interactionLabel py-2">Enzyme for Small Molecule Generation</p>
+                        <p class="interactionLabel py-2">Type</p>
+                        <p class="interactionLabel py-2">Short Name</p>
+                        <p class="interactionLabel py-2">Full Name</p>
+                        <p class="interactionLabel py-2">Alias</p>
+                        <p class="interactionLabel py-2 text-nowrap">Precursor MW</p>
+                        <p class="interactionLabel py-2"></p>
+                        <p class="interactionLabel py-2">Uniprot ID</p>
+                        <p class="interactionLabel py-2 text-nowrap">PhosphoNET ID</p>
+                        <p class="interactionLabel py-2 text-nowrap">PhosphoSite ID</p>
+                        <p class="interactionLabel py-2 align-top">Protein Function Description</p>
+                        }
+                        else
+                        {
+                        <p class="interactionLabel py-2">Type</p>
+                        <p class="interactionLabel py-2">Short Name</p>
+                        <p class="interactionLabel py-2">Full Name</p>
+                        <p class="interactionLabel py-2">Alias</p>
+                        <p class="interactionLabel py-2 text-nowrap">Precursor MW</p>
+                        <p class="interactionLabel py-2">Processing</p>
+                        <p class="interactionLabel py-2">Uniprot ID</p>
+                        <p class="interactionLabel py-2 text-nowrap">PhosphoNET ID</p>
+                        <p class="interactionLabel py-2 text-nowrap">PhosphoSite ID</p>
+                        <p class="interactionLabel py-2 align-top">Protein Function Description</p>
+                        }
+                    </div>
+                </div>
+                <img src="~/images/figure_legend.svg" alt="Legends" class="w-full pr-4" id="legendImage" />
+            </div>
+
+            @* Right Section *@
+            <div class="col-span-9 p-4" style="border: 1px solid #4800C1;">
+                <div class="grid grid-cols-2 gap-8">
+                    @* Left Column *@
+                    <div class="space-y-[73px]">
+                        <div>
+                            <h2 class="text-[#FFC721] font-bold mb-4">Receptor-focused Protein and Small Molecule
+                                Interactions</h2>
+                            <p class="text-[#738569]">
+                                This query result identifies extracellular mediators that target a selected
+                                receptor as well as cellular proteins that directly interact with the receptor
+                                to regulate its intracellular signalling. These associations are based on experimental
+                                studies as documented in the String-Db, Uniprot and other molecular interaction
+                                databases.
+                            </p>
+                        </div>
+                    </div>
+                    @* Right Column *@
+                    <div class="mt-4">
+                        <a href="http://www.kinexusproducts.ca" target="_blank" rel="noopener noreferrer"
+                            class="flex justify-center mb-2">
+                            <img src="~/images/WebsiteBannerAds-1-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-2-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-3-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-4-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-5-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-6-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-7-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-8-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-9-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-10-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-11-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-12-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-13-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-14-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-15-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-16-min.jpg" class="w-10/12 h-auto">
+                            <img src="~/images/WebsiteBannerAds-17-min.jpg" class="w-10/12 h-auto">
+                        </a>
+                    </div>
+                </div>
+                @* Receptor Information*@
+                <div class="mt-8">
+                    @if (Model.InitiatorIsSmallMolecule())
+                    {
+                    <h2 class="text-[#FFC721] font-bold pb-4" id="receptorInfoTitle">Protein or Small Molecule
+                        Information</h2>
+                    <div id="dataContainer">
+                        <p class="interactionData"></p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorShortName)</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorLongName)</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorAlias)</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.Mass)</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.CasNo ?? "")</p>
+                        <p class="interactionData"></p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.smallMoleculeInfo.MediatorCompound?.UniprotId)?.Type ?? "")</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.ShortName ?? "")</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.LongName ?? "")</p>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.Alias ?? "")</p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo.Find(p => p.UniprotId ==
+                            Model.smallMoleculeInfo.MediatorCompound?.UniprotId)?.PrecursorProteinMass ?? "")</p>
+                        <p class="interactionData py-2"></p>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="https://www.uniprot.org/uniprotkb/@Model.smallMoleculeInfo.MediatorCompound?.UniprotId/entry">
+                            <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.UniprotId ?? "")
+                            </p>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="http://www.phosphonet.ca/default.aspx?search=@Model.smallMoleculeInfo.MediatorCompound?.UniprotId">
+                            <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.UniprotId ?? "")
+                            </p>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="https://www.phosphosite.org/proteinAction.action?id=@Model.ProteinAdditionalInfo?.Find(p => p.UniprotId == Model.smallMoleculeInfo.MediatorCompound?.UniprotId)?.CstPhosphositePlusEntryId&showAllSites=true">
+                            <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                                Model.smallMoleculeInfo.MediatorCompound?.UniprotId)?.CstPhosphositePlusEntryId ?? "")
+                            </p>
+                        </a>
+                        <p class="interactionData py-2">@(Model.smallMoleculeInfo.MediatorCompound?.Description ?? "")
+                        </p>
+                    </div>
+                    }
+                    else
+                    {
+                    <h2 class="text-[#FFC721] font-bold pb-4" id="proteinInfoTitle">Protein or Small Molecule
+                        Information</h2>
+                    <div id="dataContainer">
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.Type ??
+                            "")</p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.ShortName ?? "")</p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.LongName
+                            ?? "")</p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.Aliases
+                            ?? "")</p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.PrecursorProteinMass
+                            ?? "")</p>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.Processing
+                            ?? "")</p>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="https://www.uniprot.org/uniprotkb/@Model.UniprotId/entry">
+                            <p class="interactionData py-2">
+                                @(Model.UniprotId ?? "")</p>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="http://www.phosphonet.ca/default.aspx?search=@Model.UniprotId">
+                            <p class="interactionData py-2">
+                                @(Model.UniprotId ?? "")</p>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer"
+                            href="https://www.phosphosite.org/proteinAction.action?id=@Model.ProteinAdditionalInfo?.Find(p => p.UniprotId == Model.ProteinInteraction?.FirstOrDefault()?.InitiatingProtein?.UniprotIdCasNumber)?.CstPhosphositePlusEntryId&showAllSites=true">
+                            <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                                Model.UniprotId)?.CstPhosphositePlusEntryId
+                                ?? "")</p>
+                        </a>
+                        <p class="interactionData py-2">@(Model.ProteinAdditionalInfo?.Find(p => p.UniprotId ==
+                            Model.UniprotId)?.FunctionDescription
+                            ?? "")</p>
+                    </div>
+                    }
+
+                </div>
+                @* Map *@
+                <div class="mt-8 w-full flex justify-center">
+                    <div class="grid grid-cols-3">
+                        <div class="col-span-2 pr-4">
+                            <h2 class="text-[#FFC721] font-bold mb-4 text-center">Receptor Interaction Map</h2>
+                            <p class="text-[#738569] text-center">
+                                The 'Download PDF' button provides a PDF of the map below.
+                                Use the 'Update Filters' button for applying revised filters.
+                            </p>
+                            <div class="mt-4 flex justify-center space-x-10">
+                                <button type="submit" id="downloadPdfBtn"
+                                    class="bg-gray-200 px-4 py-2 rounded text-gray-800">
+                                    Download
+                                    PDF
+                                </button>
+                                <button type="button" id="updateFiltersBtn"
+                                    class="bg-gray-200 px-4 py-2 rounded text-gray-800">
+                                    Update Filters
+                                </button>
+                            </div>
+                        </div>
+                        <div class="place-self-end w-full">
+                            <div class="border border-[#CDCDCD] p-2 text-white">
+                                <label class="cursor-pointer block">
+                                    <input id="stimulatory-interactions" type="checkbox" checked class="mr-2">Show
+                                    stimulatory interactions
+                                </label>
+                                <label class="cursor-pointer block">
+                                    <input id="inhibitory-interactions" type="checkbox" checked class="mr-2">Show
+                                    inhibitory interactions
+                                </label>
+                                <label class="cursor-pointer block">
+                                    <input id="undefined-interactions" type="checkbox" checked class="mr-2">Show
+                                    undefined interactions
+                                </label>
+                                <label class="cursor-pointer block">
+                                    <input id="show-uniprot-id" type="checkbox" checked class="mr-2">Show UniProt ID
+                                </label>
+                                <label class="cursor-pointer block">
+                                    <input id="black-background" type="checkbox" checked class="mr-2">Show black
+                                    background
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 bg-black w-full p-4 flex flex-col items-center" id="graphSection">
+                    <div class="flex justify-center items-center space-x-4 mb-4">
+                        <button id="prev-button"
+                            class="bg-gray-200 px-4 py-2 rounded text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Prev
+                        </button>
+                        <span id="page-info" class="text-white">Page 1 of 1</span>
+                        <button id="next-button"
+                            class="bg-gray-200 px-4 py-2 rounded text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Next
+                        </button>
+                    </div>
+
+                    <div id="graph-container" class="w-full flex justify-center relative">
+                        <svg class="graph w-full" style="max-width: 1000px;"></svg>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #node-info-panel {
+        max-height: 80vh;
+        overflow-y: auto;
+        z-index: 100;
+        border: 0.5px solid #543323;
+        background-color: #393a4b;
+    }
+
+    #node-info-panel.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .interactionLabel,
+    .interactionData,
+    #dataContainer>p {
+        margin-bottom: 0.5rem;
+        min-height: 1.5rem;
+        display: flex;
+    }
+
+    .interactionLabel {
+        justify-content: flex-end;
+    }
+</style>
+<script type="module">
+    import { parseProteinInteractionData } from "/js/parseProteinInteractionData.js";
+    import { initMap, setupProteinInteractionsNodeEventHandlers } from "/js/initMap.js";
+
+    var isInitiatingProtein = "@Model.IsInitiatingProtein" === "false";
+    var initiatorIsSmallMolecule = "@Model.InitiatorIsSmallMolecule()";
+    var showStimulatory = "@Model.ShowStimulatory" === "True"
+    var showInhibitory = "@Model.ShowInhibitory" === "True"
+    var showUndefined = "@Model.ShowUndefined" === "True"
+    var showUniProtId = "@Model.ShowUniProtId" === "True"
+    var showBlackBackground = "@Model.ShowBlackBackground" === "True"
+
+    var uniprotId = window.location.href.split('/').at(-1).split('?')[0]
+
+    var sites = @Html.Raw(JsonConvert.SerializeObject(Model.ProteinInteraction?.ToArray(),
+        new JsonSerializerSettings
+              { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+    var proteinAdditionalInfo = @Html.Raw(JsonConvert.SerializeObject(Model.ProteinAdditionalInfo,
+        new JsonSerializerSettings
+                { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+    var smallMoleculeInfo = @Html.Raw(JsonConvert.SerializeObject(Model.smallMoleculeInfo,
+        new JsonSerializerSettings
+                    { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
+
+    const sitesWithIcon = sites.map((site) => {
+        let protInfo;
+        if (site.UniprotID === site.InitiatingProteinId) {
+            protInfo = proteinAdditionalInfo.find(p => p.UniprotId == site.InitiatingProteinId)
+        } else {
+            protInfo = proteinAdditionalInfo.find(p => p.UniprotId == site.AssociatingProteinId)
+        }
+        const smallMolLongName = smallMoleculeInfo?.MediatorLongName;
+        if (!protInfo && smallMolLongName) {
+            site.name = smallMolLongName
+            site.iconType = "";
+            return site;
+        }
+        site.name = protInfo ? protInfo.ShortName : "";
+        if (isInitiatingProtein) {
+            site.iconType === site.InitiatingProteinIcon
+        } else {
+            site.iconType = protInfo ? protInfo.IconType : "";
+        }
+        return site;
+    })
+
+    const centerSite = sitesWithIcon.find(p => p.InitiatingProteinId === uniprotId)
+    const centerProtInfo = proteinAdditionalInfo.find(p => p.UniprotId === uniprotId)
+    const shortName = centerProtInfo.ShortName
+    let iconType = centerSite?.InitiatingProteinIcon
+    if (!iconType) {
+        iconType = centerProtInfo.IconType !== "" ? centerProtInfo.IconType : sites[0].AssociatingProteinId === centerProtInfo.UniprotId ? sites[0].AssociatingProteinIcon : "";
+    }
+
+    const ITEMS_PER_PAGE = 10;
+    const { nodes, links } = parseProteinInteractionData({ Sites: sitesWithIcon, UniprotID: uniprotId, isInitiatingProtein, initiatorIsSmallMolecule: initiatorIsSmallMolecule.toLocaleLowerCase(), iconType, shortName }, showStimulatory, showInhibitory, showUndefined);
+
+    const svg = d3
+        .select(".graph")
+        .attr("viewBox", "0 0 600 400")
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .style("width", "100%")
+        .style("height", "auto");
+
+    if (!showBlackBackground) {
+        svg.style("background-color", "white");
+    }
+
+    // Initialize the map
+    const container = document.getElementById("graph-container");
+
+    const nodesWithExternalLink = nodes.map((node) => {
+        let protInfo = proteinAdditionalInfo.find(p => p.UniprotId === node.id)
+        if (protInfo) {
+            node.stringDbLink = protInfo.StringDbLink
+            node.kinaseNetLink = protInfo.KinaseNetLink
+            node.uniprotLink = protInfo.UniprotLink
+            node.phosphoNetLink = protInfo.PhosphoNetLink
+            node.transcriptoNetLink = protInfo.TranscriptoNetLink
+            node.oncoNetLink = protInfo.OncoNetLink
+            node.drugProNetLink = protInfo.DrugProNetLink
+            node.phosphoSitePlusLink = protInfo.PhosphoSitePlusLink
+            node.isProteinInteraction = true
+            node.products = protInfo.Products
+        } else {
+            node.casLink = smallMoleculeInfo.CasLink
+            node.chemBlLink = smallMoleculeInfo.ChemBlLink
+            node.chemSpiderLink = smallMoleculeInfo.ChemSpiderLink
+            node.pubChemLink = smallMoleculeInfo.PubChemLink
+            node.casLink = smallMoleculeInfo.CasLink
+            node.isSmallMolecule = true
+            node.shortName = smallMoleculeInfo.MediatorCompound?.ShortName
+            node.longName = smallMoleculeInfo.MediatorLongName
+        }
+        return node;
+    })
+    const ids = new Set();
+    const nodesWithoutDuplicates = nodes.filter(({ id }) => !ids.has(id) && ids.add(id))
+    initMap(svg, container, links, nodesWithoutDuplicates, ITEMS_PER_PAGE, showStimulatory, showInhibitory, showUndefined, showUniProtId);
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function setEqualHeightsAndAlign() {
+            const labelContainer = document.getElementById('labelContainer');
+            const dataContainer = document.getElementById('dataContainer');
+
+            if (!labelContainer || !dataContainer) return;
+
+            labelContainer.style.marginTop = '0';
+
+            void labelContainer.offsetHeight;
+
+            const labelRect = labelContainer.getBoundingClientRect();
+            const dataRect = dataContainer.getBoundingClientRect();
+
+            const offset = dataRect.top - labelRect.top;
+
+            if (Math.abs(offset) > 0) {
+                labelContainer.style.marginTop = `${offset + 24}px`;
+            }
+
+            const labelItems = labelContainer.querySelectorAll('.interactionLabel');
+            const dataItems = dataContainer.querySelectorAll('.interactionData, p');
+
+            if (labelItems.length === dataItems.length) {
+                labelItems.forEach(item => item.style.height = 'auto');
+                dataItems.forEach(item => item.style.height = 'auto');
+
+                labelItems.forEach((labelItem, index) => {
+                    const dataItem = dataItems[index];
+                    const labelHeight = labelItem.offsetHeight;
+                    const dataHeight = dataItem.offsetHeight;
+                    const maxHeight = Math.max(labelHeight, dataHeight);
+
+                    labelItem.style.height = `${maxHeight}px`;
+                    dataItem.style.height = `${maxHeight}px`;
+                });
+            }
+        }
+
+        function alignLegendWithGraph() {
+            const legend = document.getElementById('legendImage');
+            const graphSection = document.getElementById('graphSection');
+
+            if (legend && graphSection) {
+                const graphRect = graphSection.getBoundingClientRect();
+                const legendRect = legend.getBoundingClientRect();
+
+                const offset = graphRect.top - legendRect.top;
+                if (offset > 0) {
+                    legend.style.marginTop = `${offset}px`;
+                }
+            }
+        }
+
+        setEqualHeightsAndAlign();
+        alignLegendWithGraph();
+
+        window.addEventListener('resize', function () {
+            document.getElementById('labelContainer').style.marginTop = '0';
+            document.getElementById('legendImage').style.marginTop = '0';
+
+
+            setEqualHeightsAndAlign();
+            alignLegendWithGraph();
+
+        });
+
+        const updateFiltersBtn = document.getElementById('updateFiltersBtn');
+
+        updateFiltersBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const showStimulatory = document.querySelector('#stimulatory-interactions').checked;
+            const showInhibitory = document.querySelector('#inhibitory-interactions').checked;
+            const showUndefined = document.querySelector('#undefined-interactions').checked;
+            const showUniProtId = document.querySelector('#show-uniprot-id').checked;
+            const showBlackBackground = document.querySelector('#black-background').checked;
+
+            const url = `/ProteinInteraction/Result/${encodeURIComponent(uniprotId)}` +
+                `?showStimulatory=${showStimulatory}` +
+                `&showInhibitory=${showInhibitory}` +
+                `&showUndefined=${showUndefined}` +
+                `&showUniProtId=${showUniProtId}` +
+                `&showBlackBackground=${showBlackBackground}`;
+
+            window.location.href = url;
+        });
+
+        const downloadPdfBtn = document.getElementById('downloadPdfBtn')
+
+        downloadPdfBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            svg.style.height = `${svg.clientHeight}px`;
+            svg.style.width = `${svg.clientWidth}px`;
+            $("#graph-container").print();
+        })
+    });
+
+</script>
+<style>
+    #node-info-panel {
+        max-height: 80vh;
+        overflow-y: auto;
+        z-index: 100;
+        border: 0.5px solid #543323;
+        background-color: #393a4b;
+    }
+
+    #node-info-panel.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
