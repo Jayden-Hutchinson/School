@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io;
-use std::io::prelude::*;
 use std::io::BufReader;
+use std::io::prelude::*;
 
 #[derive(Debug, Clone)]
 struct Student {
@@ -34,14 +34,9 @@ pub fn print_lines() -> io::Result<()> {
         println!("number of students: {}", num_students);
         println!("average: {}", avg_score);
         println!("minimun score = {}", min_score);
-        for student in &students_w_min {
-            print_student(student)
-        }
-
+        print_students(&students_w_min);
         println!("maximum score = {}", max_score);
-        for student in &students_w_max {
-            print_student(student)
-        }
+        print_students(&students_w_max);
     } else {
         println!("No students found")
     }
@@ -49,8 +44,10 @@ pub fn print_lines() -> io::Result<()> {
     Ok(())
 }
 
-fn print_student(student: &Student) {
-    println!("- {}, {}", student.last_name, student.first_name)
+fn print_students(students: &Vec<Student>) {
+    for student in students {
+        println!("- {}, {}", student.last_name, student.first_name)
+    }
 }
 
 fn create_student(student_data: Vec<&str>) -> Student {
