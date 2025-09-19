@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub fn primes(m: usize, n: usize) -> Vec<usize> {
     let mut p: Vec<usize> = sieve(n);
 
@@ -6,6 +8,21 @@ pub fn primes(m: usize, n: usize) -> Vec<usize> {
     }
 
     p = p.iter().cloned().filter(|&x| x >= m && x <= n).collect();
+
+    // PRINT TEST
+    let mut groups: HashMap<String, Vec<usize>> = HashMap::new();
+
+    for prime in &p {
+        let mut digits: Vec<char> = prime.to_string().chars().collect();
+        digits.sort_unstable();
+        let key: String = digits.into_iter().collect();
+
+        groups.entry(key).or_default().push(*prime);
+    }
+    let largest_group_size = groups.values().map(|v| v.len()).max().unwrap_or(0);
+
+    println!("Total 6 digit primes: {}", p.len());
+    println!("Largest Permutation Size: {}", largest_group_size);
 
     p
 }

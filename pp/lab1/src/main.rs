@@ -4,7 +4,7 @@ use std::io;
 
 fn main() -> io::Result<()> {
     students::print_lines()?;
-    let p = primes::primes(5, 50);
+    let p = primes::primes(10, 100);
     print!("{:?}", p);
 
     Ok(())
