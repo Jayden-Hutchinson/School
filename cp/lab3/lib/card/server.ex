@@ -50,11 +50,13 @@ defmodule Card.Server do
   ## Server ##
 
   # start the server with an empty list
+  @impl true
   @spec init(:ok) :: {:ok, []}
   def init(:ok) do
     {:ok, []}
   end
 
+  @impl true
   def handle_call(:new, _from, _state) do
     deck =
       for rank <- [2, 3, 4, 5, 6, 7, 8, 9, 10, :J, :Q, :K, :A],
@@ -65,11 +67,13 @@ defmodule Card.Server do
     {:reply, deck, deck}
   end
 
+  @impl true
   def handle_call(:shuffle, _from, state) do
     shuffled = Enum.shuffle(state)
     {:reply, shuffled, shuffled}
   end
 
+  @impl true
   def handle_call(:count, _from, state) do
     {:reply, length(state), state}
   end

@@ -1,0 +1,23 @@
+- syntax:
+  let f1 = |x: i32| -> i32 { x + 1 };
+  let f2 = |x| { x + 1 };  // generally compiler can infer type
+  let f3 = |x| x + 1;  // braces are optional if there's only 1 expression
+  * closure bodies that contain statements must be surrounded by braces
+- closures can borrow or moves captured value at the time it is defined
+  (see code examples in closures.rs)
+- every closure has its own type, but it implements one or more of the 3
+  Fn traits (Fn, FnMut, FnOnce)
+  Fn <: FnMut <: FnOnce (A <: B means A is a subtrait of B)
+  * this means, e.g., that an FnMut can be used where a FnOnce is expected
+  * every closure is FnOnce (i.e., can be called once)
+    {Fn closures} ⊂ {FnMut closures} ⊂ {FnOnce closures}
+  examples:
+  let mut v = vec![...];
+  |x| { v.contains(x) }  // Fn
+  |x| { v.push(x); }     // FnMut (mutates captured v)
+  |x| { drop(v); }       // FnOnce (drops captured v)
+  move || { println!("{v:?}"); }  // v is moved into closure; but closure is still Fn
+- functions that take closures: 
+  fn g<F>(f: F) where F: Fn(..) -> .. { .. }
+  fn g<F>(mut f: F) where F: FnMut(..) -> .. { .. }  // note mut before f
+  fn g<F>(f: F) where F: FnOnce(..) -> .. { .. }
