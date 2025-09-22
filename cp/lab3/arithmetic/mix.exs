@@ -1,9 +1,9 @@
-defmodule Lab3.MixProject do
+defmodule Arithmetic.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :card,
+      app: :arithmetic,
       version: "0.1.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
