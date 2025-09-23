@@ -15,37 +15,33 @@ pub enum Range {
 
 impl Range {
     pub fn parse(s: &str) -> Option<Range> {
-        let mut range = None;
+        fn parse_positive(s: &str) -> usize {
+            let number = s.parse::<usize>().expect("Invalid usize");
+            if number <= 0 {
+                panic!("Range must be positive");
+            }
+            number
+        }
+
         if s.contains(COLON) {
             let range_str: Vec<&str> = s.split(COLON).collect();
 
             match range_str.as_slice() {
-                [value, ""] => {
-                    let number: usize = value.parse().expect("Invalid usize");
-                    range = Some(Range::NToEnd(number));
-                }
-
-                ["", value] => {
-                    let number: usize = value.parse().expect("Invalid usize");
-                    range = Some(Range::StartToM(number));
-                }
-                [value1, value2] => {
-                    let number1: usize = value1.parse().expect("Invalid usize");
-                    let number2: usize = value2.parse().expect("Invalid usize");
-                    range = Some(Range::NtoM(number1, number2));
+                [n_str, ""] => Some(Range::NToEnd(parse_positive(n_str))),
+                ["", m_str] => Some(Range::StartToM(parse_positive(m_str))),
+                [n_str, m_str] => {
+                    let n = parse_positive(n_str);
+                    let m = parse_positive(m_str);
+                    if n > m {
+                        panic!("First value in range must not be larger than the second")
+                    }
+                    Some(Range::NtoM(n, m))
                 }
                 _ => panic!("Invalid Range Input"),
             }
         } else {
-            let number: usize = s.parse().expect("Invalid usize");
-            if number <= 0 {
-                panic!("Range must be positive")
-            }
-
-            range = Some(Range::N(number))
+            Some(Range::N(parse_positive(s)))
         }
-
-        range
     }
     pub fn contains(&self, n: usize) -> bool {
         true
