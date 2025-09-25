@@ -1,9 +1,13 @@
 use std::env;
+use std::fs;
+use std::io::{self, BufRead};
 
 const C_MODE: &str = "-c";
 const F_MODE: &str = "-f";
 const COMMA: &str = ",";
 const COLON: &str = ":";
+
+// Start
 
 #[derive(Debug)]
 pub enum Range {
@@ -59,7 +63,7 @@ impl Range {
 /// -c = cut
 /// -
 /// followed by one or more ranges separated by commas
-pub fn process_input(input: &String) -> Vec<&str> {
+pub fn process_query(input: &str) -> Vec<&str> {
     if !(input.starts_with(C_MODE) || input.starts_with(F_MODE)) {
         panic!("Error: first argument must start with -c or -f flag");
     }
@@ -73,23 +77,74 @@ pub fn process_input(input: &String) -> Vec<&str> {
     vec_range_str
 }
 
-fn main() {
-    //!TODO UNCOMMENT WHEN DONE
-    let _cmd_args: Vec<String> = env::args().collect();
-    let args: Vec<String> = vec!["".to_string(), "-c1,2:,:3,4:5,10:11,12:14".to_string()];
-    println!("Program Running: {}", &args[0]);
+// fn readFile(file_name: &String) ->  {
+// let file_content = fs::read_to_string(file_path).expect("Error reading file");
+// }
 
-    if args.len() < 2 {
+fn validate_args(args: &Vec<String>) -> &str {
+    if args.len() <= 1 {
         panic!("Usage: ./cut <-c|-f><ranges> <file>");
     }
+    &args[1]
+}
 
-    let input: &String = &args[1];
+fn main() {
+    //!TODO WHEN DONE
+    let args: Vec<String> = env::args().collect();
 
-    let range_strings: Vec<&str> = process_input(input);
+    let query: &str = validate_args(&args);
+    let range_strings: Vec<&str> = process_query(&query);
 
-    println!("Ranges: {:?}", range_strings);
-    for range_str in range_strings.iter() {
-        let range = Range::parse(range_str).unwrap();
-        println!("{:?}", range);
+    let ranges: Vec<Range> = range_strings
+        .iter()
+        .map(|range_str| Range::parse(range_str).unwrap())
+        .collect();
+
+    let stdin = io::stdin();
+    for line in stdin.lock().lines() {
+        let line: String = line.unwrap();
+        let mut result = String::new();
+
+        println!("Got line: {}", line);
+
+        for range in &ranges {
+            let chars: Vec<char> = line.chars().collect();
+
+            let slice = match range {
+                Range::N(n) => {
+                    if *n == 0 || *n > chars.len() {
+                        "".to_string()
+                    } else {
+                        chars[n - 1..*n].iter().collect()
+                    }
+                }
+                Range::NToEnd(n) => {
+                    if *n == 0 || *n > chars.len() {
+                        "".to_string()
+                    } else {
+                        chars[n - 1..].iter().collect()
+                    }
+                }
+                Range::NtoM(n, m) => {
+                    if *n == 0 || *n > chars.len() {
+                        "".to_string()
+                    } else {
+                        let end = (*m).min(chars.len());
+                        chars[n - 1..end].iter().collect()
+                    }
+                }
+                Range::StartToM(m) => {
+                    let end = (*m).min(chars.len());
+                    chars[..end].iter().collect()
+                }
+            };
+            println!("slice: {}", slice);
+            result.push_str(&slice);
+        }
+
+        // PROGRAM ON LINES HERE
+        println!("result {}", result);
     }
+
+    println!("Ranges: {:?}", ranges);
 }
