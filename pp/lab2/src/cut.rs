@@ -1,13 +1,12 @@
 use std::env;
-use std::fs;
 use std::io::{self, BufRead};
+use std::panic;
 
 const C_MODE: &str = "-c";
 const F_MODE: &str = "-f";
 const COMMA: &str = ",";
 const COLON: &str = ":";
-
-// Start
+const TAB: &str = "\t";
 
 #[derive(Debug)]
 pub enum Range {
@@ -37,7 +36,7 @@ impl Range {
                     let n = parse_positive(n_str);
                     let m = parse_positive(m_str);
                     if n > m {
-                        panic!("First value in range must not be larger than the second")
+                        panic!("Invalid range: start > end")
                     }
                     Some(Range::NtoM(n, m))
                 }
@@ -48,7 +47,32 @@ impl Range {
         }
     }
     pub fn contains(&self, n: usize) -> bool {
-        true
+        match self {
+            Range::N(x) => n == *x,
+            Range::NToEnd(x) => n >= *x,
+            Range::NtoM(start, end) => n >= *start && n <= *end,
+            Range::StartToM(end) => n <= *end,
+        }
+    }
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let query: &str = validate_args(&args);
+    let ranges: Vec<Range> = process_query(&query);
+    let is_char_mode = query.starts_with(C_MODE);
+
+    let stdin = io::stdin();
+    for line in stdin.lock().lines() {
+        let line: String = line.unwrap();
+        let result = if is_char_mode {
+            cut_chars(&line, &ranges)
+        } else {
+            cut_fields(&line, &ranges)
+        };
+
+        println!("{}", result)
     }
 }
 
@@ -63,88 +87,46 @@ impl Range {
 /// -c = cut
 /// -
 /// followed by one or more ranges separated by commas
-pub fn process_query(input: &str) -> Vec<&str> {
-    if !(input.starts_with(C_MODE) || input.starts_with(F_MODE)) {
+pub fn process_query(query: &str) -> Vec<Range> {
+    if !(query.starts_with(C_MODE) || query.starts_with(F_MODE)) {
         panic!("Error: first argument must start with -c or -f flag");
     }
 
-    if input.len() < 2 {
+    if query.len() < 2 {
         panic!("Error: no ranges provided after flag");
     }
 
-    let input_str: &str = &input[2..]; // remove -c or -f
-    let vec_range_str: Vec<&str> = input_str.split(COMMA).collect();
-    vec_range_str
+    let ranges_str: &str = &query[2..]; // remove -c or -f
+    ranges_str
+        .split(COMMA)
+        .map(|s| Range::parse(s).unwrap())
+        .collect()
 }
-
-// fn readFile(file_name: &String) ->  {
-// let file_content = fs::read_to_string(file_path).expect("Error reading file");
-// }
 
 fn validate_args(args: &Vec<String>) -> &str {
     if args.len() <= 1 {
         panic!("Usage: ./cut <-c|-f><ranges> <file>");
     }
+
+    if args.len() > 2 {
+        panic!("Usage: one argument allowed")
+    }
     &args[1]
 }
 
-fn main() {
-    //!TODO WHEN DONE
-    let args: Vec<String> = env::args().collect();
+fn cut_chars(line: &str, ranges: &[Range]) -> String {
+    line.chars()
+        .enumerate()
+        .filter(|(i, _)| ranges.iter().any(|r| r.contains(i + 1)))
+        .map(|(_, c)| c)
+        .collect()
+}
 
-    let query: &str = validate_args(&args);
-    let range_strings: Vec<&str> = process_query(&query);
-
-    let ranges: Vec<Range> = range_strings
-        .iter()
-        .map(|range_str| Range::parse(range_str).unwrap())
-        .collect();
-
-    let stdin = io::stdin();
-    for line in stdin.lock().lines() {
-        let line: String = line.unwrap();
-        let mut result = String::new();
-
-        println!("Got line: {}", line);
-
-        for range in &ranges {
-            let chars: Vec<char> = line.chars().collect();
-
-            let slice = match range {
-                Range::N(n) => {
-                    if *n == 0 || *n > chars.len() {
-                        "".to_string()
-                    } else {
-                        chars[n - 1..*n].iter().collect()
-                    }
-                }
-                Range::NToEnd(n) => {
-                    if *n == 0 || *n > chars.len() {
-                        "".to_string()
-                    } else {
-                        chars[n - 1..].iter().collect()
-                    }
-                }
-                Range::NtoM(n, m) => {
-                    if *n == 0 || *n > chars.len() {
-                        "".to_string()
-                    } else {
-                        let end = (*m).min(chars.len());
-                        chars[n - 1..end].iter().collect()
-                    }
-                }
-                Range::StartToM(m) => {
-                    let end = (*m).min(chars.len());
-                    chars[..end].iter().collect()
-                }
-            };
-            println!("slice: {}", slice);
-            result.push_str(&slice);
-        }
-
-        // PROGRAM ON LINES HERE
-        println!("result {}", result);
-    }
-
-    println!("Ranges: {:?}", ranges);
+fn cut_fields(line: &str, ranges: &[Range]) -> String {
+    line.split(TAB)
+        .enumerate()
+        .filter(|(i, _)| !ranges.iter().any(|r| r.contains(*i)))
+        .map(|(_, field)| field)
+        .collect::<Vec<_>>()
+        .join(TAB)
 }

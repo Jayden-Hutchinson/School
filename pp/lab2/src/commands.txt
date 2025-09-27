@@ -2,3 +2,4 @@ Compile and run code -> rustc rust.rs ./cut <args>
 
 Test Input
 rustc cut.rs && ./cut -c2,:3,10,5:7,13: < data.txt
+rustc cut.rs && ./cut -f2,3 < data.csv
