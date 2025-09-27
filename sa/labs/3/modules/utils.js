@@ -1,7 +1,9 @@
-import messages from "../locals/en/en.js";
+const messages = require("../locals/en/en.js");
 
-export function getDate(name) {
-  const now = new Date().toDateString();
-  const greeting = messages.greeting.replace("%1", name);
-  return `<span style="color:blue;">${greeting} ${now}</span>`;
+function getDate(name) {
+  const now = new Date().toString();
+  const greeting = messages.date.replace("%1", name);
+  return `<span style="color:blue; font-size:48px">${greeting} ${now}</span>`;
 }
+
+module.exports = getDate;
