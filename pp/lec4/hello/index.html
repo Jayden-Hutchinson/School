@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Hello </title>
+  </head>
+  <body>
+    <script type="module">
+    import init, {greet} from "./pkg/hello.js";
+    init().then(() => {
+      greet("Death");
+    });
+    </script>
+  </body>
+</html>

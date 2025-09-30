@@ -3,11 +3,11 @@ const http = require("http");
 const url = require("url");
 const fs = require("fs");
 const getDate = require("./utils.js");
-const { match } = require("assert");
+
+const messages = require("../locals/en/en.js");
 
 const PORT = 3000;
 const SUCCESS = 200;
-const FAILURE = 500;
 const FILE_NAME = "file.txt";
 const NEW_LINE = "\n";
 const EMPTY_STRING = "";
@@ -15,7 +15,7 @@ const TEXT = { UTF8: "utf8" };
 const CONTENT_TYPE = { HTML: { "Content-Type": "text/html" } };
 const SERVER_URL = {
   GET_DATE: "/COMP4537/labs/3/getDate/",
-  READ_FILE: "/COMP4537/labs/3/readFile/",
+  READ_FILE: "/COMP4537/labs/3/readFile/file.txt",
   WRITE_FILE: "/COMP4537/labs/3/writeFile/",
 };
 
@@ -41,8 +41,8 @@ class ApiServer {
             return;
         }
         // Incorrect path given
-        res.writeHead(404, CONTENT_TYPE.HTML);
-        return res.end("404 Not Found");
+        res.writeHead(messages.notFound.error, CONTENT_TYPE.HTML);
+        return res.end(messages.notFound.message);
       })
       .listen(PORT, () => {
         console.log(`Server running at http://localhost:${PORT}`);
@@ -51,7 +51,7 @@ class ApiServer {
 
   handleGetDate(query, res) {
     res.writeHead(SUCCESS, CONTENT_TYPE.HTML);
-    const name = query.name?.trim() || "Guest";
+    const name = query.name?.trim();
     const message = getDate(name);
     return res.end(message);
   }
@@ -59,7 +59,7 @@ class ApiServer {
   handleReadFile(res) {
     fs.readFile(FILE_NAME, TEXT.UTF8, (err, data) => {
       if (err) {
-        res.writeHead(FAILURE, CONTENT_TYPE.HTML);
+        res.writeHead(messages.readFailure.error, CONTENT_TYPE.HTML);
         return res.end(err.message);
       }
       res.writeHead(SUCCESS, CONTENT_TYPE.HTML);
@@ -69,14 +69,14 @@ class ApiServer {
 
   handleWriteFile(query, res) {
     if (!query.text || query.text.trim() === EMPTY_STRING) {
-      res.writeHead(400, CONTENT_TYPE.HTML);
-      return res.end("Error: empty string");
+      res.writeHead(messages.writeFailure.error, CONTENT_TYPE.HTML);
+      return res.end(messages.writeFailure.value);
     }
     const textToAppend = query.text + NEW_LINE;
     fs.appendFile(FILE_NAME, textToAppend, (err) => {
       if (err) {
-        res.writeHead(FAILURE, CONTENT_TYPE.HTML);
-        return res.end("Error writing file");
+        res.writeHead(messages.appendFailure.error, CONTENT_TYPE.HTML);
+        return res.end(messages.appendFailure.message);
       }
       res.writeHead(SUCCESS, CONTENT_TYPE.HTML);
       return res.end(query.text);

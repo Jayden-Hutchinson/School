@@ -6,7 +6,7 @@ defmodule Card.Server do
   """
   @spec start() :: {:ok, pid()}
   def start() do
-    {:ok, pid} = GenServer.start(__MODULE__, :ok)
+    {:ok, pid} = GenServer.start_link(__MODULE__, :ok)
 
     # request a new deck from the server
     new(pid)
