@@ -1,0 +1,44 @@
+<!-- uses preformatted text -->
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Game of Life</title>
+    <style>
+      body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="game-of-life-canvas"></pre>
+    <script type="module">
+      // init corresponds to the default export __wbg_init in game_of_life.js
+      import init, { Universe } from "./pkg/game_of_life.js";
+
+      const pre = document.getElementById("game-of-life-canvas");
+
+      init().then(() => {
+        const universe = Universe.new();
+        pre.textContent = universe.render();
+
+        const renderLoop = () => {
+          pre.textContent = universe.render();
+          universe.tick();
+
+          requestAnimationFrame(renderLoop);
+        };
+
+        requestAnimationFrame(renderLoop);
+      });
+    </script>
+  </body>
+</html>

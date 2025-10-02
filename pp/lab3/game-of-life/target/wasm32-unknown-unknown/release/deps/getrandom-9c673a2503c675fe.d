@@ -1,0 +1,11 @@
+C:\Users\Jayden\school\pp\lab3\game-of-life\target\wasm32-unknown-unknown\release\deps\getrandom-9c673a2503c675fe.d: C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\lib.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\util.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error_impls.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\js.rs
+
+C:\Users\Jayden\school\pp\lab3\game-of-life\target\wasm32-unknown-unknown\release\deps\libgetrandom-9c673a2503c675fe.rlib: C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\lib.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\util.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error_impls.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\js.rs
+
+C:\Users\Jayden\school\pp\lab3\game-of-life\target\wasm32-unknown-unknown\release\deps\libgetrandom-9c673a2503c675fe.rmeta: C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\lib.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\util.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error_impls.rs C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\js.rs
+
+C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\lib.rs:
+C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error.rs:
+C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\util.rs:
+C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\error_impls.rs:
+C:\Users\Jayden\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\getrandom-0.2.16\src\js.rs:

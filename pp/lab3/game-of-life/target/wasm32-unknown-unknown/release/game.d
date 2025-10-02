@@ -1,0 +1,1 @@
+C:\Users\Jayden\school\pp\lab3\game-of-life\target\wasm32-unknown-unknown\release\game.wasm: C:\Users\Jayden\school\pp\lab3\game-of-life\src\lib.rs C:\Users\Jayden\school\pp\lab3\game-of-life\src\utils.rs
