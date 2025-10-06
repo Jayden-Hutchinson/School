@@ -6,8 +6,10 @@ use wasm_bindgen::prelude::*;
 #[derive(Copy, Clone, Eq, PartialEq)]
 #[repr(u8)]
 pub enum Cell {
-    Dead = 0,
-    Alive = 1,
+    Alive,
+    Dying,
+    Dead,
+
 }
 
 #[wasm_bindgen]
@@ -19,6 +21,7 @@ impl Cell {
             Cell::Alive
         };
     }
+
 }
 #[wasm_bindgen]
 pub struct Universe {
@@ -54,9 +57,10 @@ impl Universe {
             for c in 0..self.width {
                 let idx = self.get_index(r, c);
                 cells[idx] = match (self.cells[idx], self.count_live_neighbours(r, c)) {
-                    (_, 3) => Cell::Alive,
-                    (Cell::Alive, 2) => Cell::Alive,
-                    _ => Cell::Dead,
+                    (Cell::Alive, _) => Cell::Dying,
+                    (Cell::Dying, _) => Cell::Dead,
+                    (Cell::Dead, 2 ) => Cell::Alive
+                    other => other,
                 }
             }
         }
