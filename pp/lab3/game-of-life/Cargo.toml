@@ -2,7 +2,7 @@
 name = "game-of-life"
 version = "0.1.0"
 edition = "2024"
-authors = ['abronson']
+authors = ['JHutchinson']
 
 [lib]
 crate-type = ["cdylib", "rlib"]
