@@ -1,6 +1,6 @@
 defmodule Counter.Worker do
   use GenServer
-  @store  Counter.Store
+  @store Counter.Store
 
   def start_link(name) do
     GenServer.start_link(__MODULE__, name, name: via(name))
@@ -23,11 +23,13 @@ defmodule Counter.Worker do
     # Process.sleep(5000)
     IO.puts("Counter.Worker starting ... #{name}(#{inspect(self())})")
     name = {__MODULE__, name}
-    value = 
+
+    value =
       case :ets.lookup(@store, name) do
         [] -> 0
         [{_, x}] -> x
       end
+
     {:ok, {name, value}}
   end
 
@@ -40,7 +42,7 @@ defmodule Counter.Worker do
   def handle_call(:value, _from, {_, value} = state) do
     {:reply, value, state}
   end
- 
+
   @impl true
   def terminate(_reason, state) do
     :ets.insert(@store, state)
