@@ -1,11 +1,12 @@
+require Logger
 IO.puts("Server starting...")
 
 server = Chat.ProxyServer.start()
 
 case server do
   {:ok, pid} ->
-    IO.puts("ProxyServer PID: #{inspect(pid)}")
+    Logger.info("Chat.ProxyServer started #{inspect(pid)}")
 
   {:error, reason} ->
-    IO.puts(reason)
+    Logger.error(reason)
 end
