@@ -1,7 +1,12 @@
 defmodule Chat.ProxyServer do
   use GenServer
 
+  require Logger
+
+  @log_prefix "[#{inspect(self())}] [Proxy Server] "
+
   def start(port \\ 6666) do
+    Logger.info("#{@log_prefix} Started")
     GenServer.start(__MODULE__, port)
   end
 
@@ -12,6 +17,7 @@ defmodule Chat.ProxyServer do
     case :gen_tcp.listen(port, opts) do
       {:ok, listen_socket} ->
         send(self(), :accept)
+        Logger.info("#{@log_prefix} listening on port #{inspect(port)}")
         {:ok, listen_socket}
 
       {:error, reason} ->
@@ -24,15 +30,13 @@ defmodule Chat.ProxyServer do
     case :gen_tcp.accept(listen_socket) do
       # connection established
       {:ok, socket} ->
+        Logger.info("#{@log_prefix} Client connected: #{inspect(socket)}")
         # start the proxy
         {:ok, pid} = Chat.Proxy.start_link(socket)
-
         # assign the proxy pid to the socket
         :gen_tcp.controlling_process(socket, pid)
-
         # loop to continue listening for connections
         send(self(), :accept)
-
         # continue running on the socket
         {:noreply, listen_socket}
 
