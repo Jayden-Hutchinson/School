@@ -6,7 +6,20 @@ defmodule Chat.Proxy do
   @log_prefix "[#{inspect(self())}] [Proxy]"
 
   def nck(input) do
-    Logger.info("#{@log_prefix} [NCK] #{inspect(input)}")
+    Logger.info("#{@log_prefix} [/NCK] #{inspect(input)}")
+
+    # args = String.split(input)
+  end
+
+  def handle("/NCK" <> rest) do
+    Logger.info("#{@log_prefix} [/NCK] #{inspect(rest)}")
+
+    args = String.split(rest)
+
+    case args do
+      [nickname | _] -> Logger.info(nickname)
+      [] -> Logger.info("invalid")
+    end
   end
 
   def lst(input) do
@@ -36,15 +49,16 @@ defmodule Chat.Proxy do
   def handle_info({:tcp, socket, input}, socket) do
     # data = String.trim(data)
 
-    command = String.slice(input, 0, 4)
+    # command = String.slice(input, 0, 4)
+    handle(input)
 
-    case command do
-      "/NCK" -> nck(input)
-      "/LST" -> lst(input)
-      "/MSG" -> msg(input)
-      "/GRP" -> grp(input)
-      _ -> Logger.alert("Invalid command")
-    end
+    # case command do
+    #   "/NCK" -> nck(input)
+    #   "/LST" -> lst(input)
+    #   "/MSG" -> msg(input)
+    #   "/GRP" -> grp(input)
+    #   _ -> Logger.alert("Invalid command")
+    # end
 
     # Logger.info("#{@log_prefix} #{data}")
     :inet.setopts(socket, active: :once)
