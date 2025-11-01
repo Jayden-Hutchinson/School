@@ -5,9 +5,9 @@ defmodule Chat.ProxyServer do
 
   @log_prefix "[#{inspect(self())}] [Proxy Server] "
 
-  def start(port \\ 6666) do
+  def start_link(port \\ 6666) do
     Logger.info("#{@log_prefix} Started")
-    GenServer.start(__MODULE__, port)
+    GenServer.start_link(__MODULE__, port)
   end
 
   @impl true

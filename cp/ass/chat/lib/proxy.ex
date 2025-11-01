@@ -12,14 +12,19 @@ defmodule Chat.Proxy do
   end
 
   def handle("/NCK" <> rest) do
-    Logger.info("#{@log_prefix} [/NCK] #{inspect(rest)}")
+    args = rest |> String.trim() |> String.split()
 
-    args = String.split(rest)
+    Logger.info("#{@log_prefix} [/NCK] Input: #{inspect(args)}")
 
     case args do
-      [nickname | _] -> Logger.info(nickname)
-      [] -> Logger.info("invalid")
+      [nickname | _] -> Chat.Server.set_nickname(nickname, self())
+      [] -> Logger.info("invalid input")
     end
+  end
+
+  def handle("/MSG" <> rest) do
+    Logger.info("#{@log_prefix} [/MSG] #{inspect(rest)}")
+    # args = String.split(rest)
   end
 
   def lst(input) do
@@ -71,5 +76,11 @@ defmodule Chat.Proxy do
     Logger.info("#{@log_prefix} #{inspect(socket)} Closed")
     :gen_tcp.close(socket)
     {:stop, :normal, socket}
+  end
+
+  @impl true
+  def handle_info({:message, message}, socket) do
+    Logger.info("#{@log_prefix} #{message}")
+    {:noreply, socket}
   end
 end
