@@ -3,9 +3,6 @@ defmodule Chat.Server do
 
   require Logger
 
-  # for logging the ets table in the console
-  # Logger.info(inspect(:ets.tab2list(table)))
-
   @log_prefix "[#{inspect(self())}] [Server]"
 
   def via() do
@@ -26,25 +23,28 @@ defmodule Chat.Server do
 
   @impl true
   def init(:ok) do
-    table = :ets.new(Chat.Nicknames, [:set, :protected, :named_table])
+    nickname_table = :ets.new(Chat.Nicknames, [:set, :protected, :named_table])
     Logger.info("#{@log_prefix} Started")
-    {:ok, table}
+    {:ok, nickname_table}
   end
 
   @impl true
-  def handle_cast({:set_nickname, {nickname, proxy_pid}}, table) do
-    :ets.insert(table, {nickname, proxy_pid})
+  def handle_cast({:set_nickname, {nickname, proxy_pid}}, nickname_table) do
+    :ets.insert(nickname_table, {nickname, proxy_pid})
     Logger.info("#{@log_prefix} Inserted new nickname: #{nickname}")
-    Logger.info("#{@log_prefix} Current Users: #{inspect(:ets.tab2list(table))}")
-    {:noreply, table}
+    Logger.info("#{@log_prefix} Current Users: #{inspect(:ets.tab2list(nickname_table))}")
+    {:noreply, nickname_table}
   end
 
   @impl true
-  def handle_cast({:send_message, {nickname, message}}, table) do
-    case :ets.lookup(table, nickname) do
+  def handle_cast({:send_message, {nickname, message}}, nickname_table) do
+    Logger.info("#{@log_prefix} To #{nickname}: #{message}")
+
+    case :ets.lookup(nickname_table, nickname) do
       [{_nickname, proxy_pid}] -> send(proxy_pid, {:message, message})
+      [] -> Logger.info("#{@log_prefix} #{nickname} is not a registered user")
     end
 
-    {:noreply, table}
+    {:noreply, nickname_table}
   end
 end
