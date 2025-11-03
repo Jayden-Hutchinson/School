@@ -15,29 +15,31 @@ defmodule Chat.Proxy do
     Logger.info("#{@log_prefix} [/NCK] Input: #{inspect(args)}")
 
     case args do
-      [nickname | _] -> Chat.Server.set_nickname(nickname, self())
+      [nickname | _] -> send(self(), {:nck, nickname})
       [] -> Logger.info("invalid input")
     end
   end
 
   def handle("/MSG" <> rest) do
-    args = rest |> String.trim() |> String.split(",", trim: true) |> Enum.map(&String.trim/1)
+    Logger.info("#{@log_prefix} #{inspect(rest)}")
 
-    Logger.info("#{@log_prefix} [/MSG] #{inspect(args)}")
+    if String.starts_with?(rest, "#") do
+      [group_name, message] = rest |> String.split(" ", parts: 2, trim: true)
 
-    {nicknames, [last]} = Enum.split(args, -1)
-    [nickname | message_parts] = String.split(last, " ", trim: true)
-    all_nicknames = nicknames ++ [nickname]
-    message = message_parts |> Enum.join(" ")
-
-    [first | rest] = all_nicknames
-
-    if String.starts_with?(first, "#") do
-      send(self(), {:group_msg, first, message})
+      Logger.info("#{@log_prefix} Group: #{inspect(group_name)} Message: #{inspect(message)}")
+      send(self(), {:msg_group, group_name, message})
     else
-      Enum.each(all_nicknames, fn nickname ->
-        Chat.Server.send_message(nickname, message)
-      end)
+      args = rest |> String.trim() |> String.split(",", trim: true) |> Enum.map(&String.trim/1)
+
+      Logger.info("#{@log_prefix} [/MSG] #{inspect(args)}")
+      {nicknames, [last]} = Enum.split(args, -1)
+      [nickname | message_parts] = String.split(last, " ", trim: true)
+      all_nicknames = nicknames ++ [nickname]
+      message = message_parts |> Enum.join(" ")
+
+      [first | rest] = all_nicknames
+
+      send(self(), {:msg, args, args})
     end
   end
 
@@ -87,19 +89,20 @@ defmodule Chat.Proxy do
   end
 
   @impl true
-  def handle_info({:message, message}, {socket, group_table}) do
+  def handle_info({:nck, nickname}, {socket, group_table}) do
+    Chat.Server.set_nickname(nickname, self())
+
+    {:noreply, {socket, group_table}}
+  end
+
+  @impl true
+  def handle_info({:msg, message}, {socket, group_table}) do
     Logger.info("#{@log_prefix} #{message}")
     {:noreply, {socket, group_table}}
   end
 
   @impl true
-  def handle_info({:group, group_name, nicknames}, {socket, group_table}) do
-    :ets.insert(group_table, {group_name, nicknames})
-    Logger.info("#{@log_prefix} Current Groups: #{inspect(:ets.tab2list(group_table))}")
-    {:noreply, {socket, group_table}}
-  end
-
-  def handle_info({:group_msg, group_name, message}, {socket, group_table}) do
+  def handle_info({:msg_group, group_name, message}, {socket, group_table}) do
     case :ets.lookup(group_table, group_name) do
       [{_group_name, nicknames}] ->
         Enum.each(nicknames, fn nickname ->
@@ -112,4 +115,15 @@ defmodule Chat.Proxy do
 
     {:noreply, {socket, group_table}}
   end
+
+  @impl true
+  def handle_info({:grp, group_name, nicknames}, {socket, group_table}) do
+    :ets.insert(group_table, {group_name, nicknames})
+    Logger.info("#{@log_prefix} Current Groups: #{inspect(:ets.tab2list(group_table))}")
+    {:noreply, {socket, group_table}}
+  end
+
+  # @impl true
+  # def handle_info({:lst}) do
+  # end
 end
