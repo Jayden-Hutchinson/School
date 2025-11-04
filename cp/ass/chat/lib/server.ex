@@ -21,6 +21,10 @@ defmodule Chat.Server do
     GenServer.cast(via(), {:send_message, {to, from, message}})
   end
 
+  def get_nicknames(proxy_pid) do
+    GenServer.cast(via(), {:get_nicknames, proxy_pid})
+  end
+
   @impl true
   def init(:ok) do
     nickname_table = :ets.new(Chat.Nicknames, [:set, :protected, :named_table])
@@ -31,19 +35,27 @@ defmodule Chat.Server do
   @impl true
   def handle_cast({:set_nickname, {nickname, proxy_pid}}, nickname_table) do
     :ets.insert(nickname_table, {nickname, proxy_pid})
-    Logger.info("#{@log_prefix} Inserted new nickname: #{nickname}")
-    Logger.info("#{@log_prefix} Current Users: #{inspect(:ets.tab2list(nickname_table))}")
+
+    Logger.info("#{@log_prefix} New user: #{nickname} #{inspect(:ets.tab2list(nickname_table))}")
+
     {:noreply, nickname_table}
   end
 
   @impl true
   def handle_cast({:send_message, {to, from, message}}, nickname_table) do
-    Logger.info("#{@log_prefix} To #{to}: #{message}")
-
     case :ets.lookup(nickname_table, to) do
       [{_nickname, proxy_pid}] -> send(proxy_pid, {:incoming_msg, from, message})
       [] -> Logger.info("#{@log_prefix} #{to} is not a registered user")
     end
+
+    {:noreply, nickname_table}
+  end
+
+  @impl true
+  def handle_cast({:get_nicknames, proxy_pid}, nickname_table) do
+    nicknames = :ets.match(nickname_table, {:"$1", :_}) |> List.flatten()
+
+    send(proxy_pid, {:get_nicknames, nicknames})
 
     {:noreply, nickname_table}
   end

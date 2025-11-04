@@ -13,19 +13,29 @@ class Client {
                 final PrintWriter out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()), true);
                 final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));) {
 
-            String line;
-            String reply;
+            Thread reader = new Thread(() -> {
+                String reply;
+                try {
+                    while ((reply = in.readLine()) != null) {
+                        System.out.println("\n" + reply);
+                        System.out.print("> ");
+                        System.out.flush();
+                    }
+                } catch (IOException error) {
+                    System.out.println("Connection closed.");
+                }
+            });
+            reader.setDaemon(true);
+            reader.start();
 
+            String line;
             while (true) {
                 System.out.print("> ");
-                if ((line = stdin.readLine()) == null) {
+                line = stdin.readLine();
+                if (line == null) {
                     break;
                 }
                 out.println(line);
-                if ((reply = in.readLine()) == null) {
-                    break;
-                }
-                System.out.println(reply);
             }
         }
     }
