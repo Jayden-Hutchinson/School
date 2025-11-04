@@ -17,8 +17,7 @@ class Client {
                 String reply;
                 try {
                     while ((reply = in.readLine()) != null) {
-                        System.out.println("\n" + reply);
-                        System.out.print("> ");
+                        System.out.println(reply);
                         System.out.flush();
                     }
                 } catch (IOException error) {
@@ -30,7 +29,6 @@ class Client {
 
             String line;
             while (true) {
-                System.out.print("> ");
                 line = stdin.readLine();
                 if (line == null) {
                     break;

@@ -1,2 +1,1 @@
-
-Chat.ProxyServer.start()
+Chat.ProxyServer.start_link()

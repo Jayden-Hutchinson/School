@@ -20,19 +20,12 @@ defmodule Chat.Proxy do
   end
 
   def handle("/MSG" <> rest) do
-    if String.starts_with?(rest, "#") do
-      [group, msg] = rest |> String.split(" ", parts: 2, trim: true)
+    [recipiant_str, msg] =
+      rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
 
-      log("Group: #{inspect(group)} message: #{inspect(msg)}")
-      send(self(), {:group_msg, group, msg})
-    else
-      [recipiant_str, msg] =
-        rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
+    recipiants = recipiant_str |> String.split(",")
 
-      recipiants = recipiant_str |> String.split(",")
-
-      send(self(), {:msg, recipiants, msg})
-    end
+    send(self(), {:msg, recipiants, msg})
   end
 
   def handle("/GRP" <> rest) do
@@ -93,11 +86,29 @@ defmodule Chat.Proxy do
   end
 
   @impl true
-  def handle_info({:msg, recipiants, msg}, state = {name, _socket, _table}) do
+  def handle_info({:msg, names, msg}, state = {name, _socket, table}) do
     if name == "unregistered" do
       log("Must be registered to send a message")
     else
-      log("Sending Message - Recipiants: #{inspect(recipiants)} message: #{inspect(msg)}")
+      recipiants =
+        Enum.reduce(names, [], fn name, acc ->
+          cond do
+            String.starts_with?(name, "#") ->
+              case :ets.lookup(table, name) do
+                [{_key, name_list}] ->
+                  acc ++ name_list
+
+                [] ->
+                  acc
+              end
+
+            true ->
+              acc ++ [name]
+          end
+        end)
+        |> Enum.uniq()
+
+      log("Sending Message to #{inspect(recipiants)} message: #{inspect(msg)}")
 
       Enum.each(recipiants, fn to ->
         Chat.Server.send_message(to, name, msg)
