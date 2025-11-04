@@ -2,128 +2,141 @@ defmodule Chat.Proxy do
   use GenServer
   require Logger
 
-  @log_prefix "[#{inspect(self())}] [Proxy]"
+  def log_prefix() do
+    "[#{inspect(self())}] [Proxy]"
+  end
 
   def start_link(socket) do
-    Logger.info("#{@log_prefix} Started")
+    Logger.info("#{log_prefix()} Started")
     GenServer.start_link(__MODULE__, socket)
   end
 
   def handle("/NCK" <> rest) do
     args = rest |> String.trim() |> String.split()
 
-    Logger.info("#{@log_prefix} [/NCK] Input: #{inspect(args)}")
+    Logger.info("#{log_prefix()} [/NCK] Input: #{inspect(args)}")
 
     case args do
-      [nickname | _] -> send(self(), {:nck, nickname})
+      [nick | _] -> send(self(), {:nck, nick})
       [] -> Logger.info("invalid input")
     end
   end
 
   def handle("/MSG" <> rest) do
-    Logger.info("#{@log_prefix} #{inspect(rest)}")
+    Logger.info("#{log_prefix()} #{inspect(rest)}")
 
     if String.starts_with?(rest, "#") do
-      [group_name, message] = rest |> String.split(" ", parts: 2, trim: true)
+      [group, msg] = rest |> String.split(" ", parts: 2, trim: true)
 
-      Logger.info("#{@log_prefix} Group: #{inspect(group_name)} Message: #{inspect(message)}")
-      send(self(), {:msg_group, group_name, message})
+      Logger.info("#{log_prefix()} Group: #{inspect(group)} msg: #{inspect(msg)}")
+      send(self(), {:msg_group, group, msg})
     else
-      args = rest |> String.trim() |> String.split(",", trim: true) |> Enum.map(&String.trim/1)
+      [recipiants, msg] =
+        rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
 
-      Logger.info("#{@log_prefix} [/MSG] #{inspect(args)}")
-      {nicknames, [last]} = Enum.split(args, -1)
-      [nickname | message_parts] = String.split(last, " ", trim: true)
-      all_nicknames = nicknames ++ [nickname]
-      message = message_parts |> Enum.join(" ")
+      recipiant_list = recipiants |> String.split(",")
 
-      [first | rest] = all_nicknames
+      Logger.info(
+        "#{log_prefix()} [/MSG] Recipiants: #{inspect(recipiant_list)} msg: #{inspect(msg)}"
+      )
 
-      send(self(), {:msg, args, args})
+      send(self(), {:msg, recipiant_list, msg})
     end
   end
 
   def handle("/GRP" <> rest) do
     args = rest |> String.trim() |> String.split(",", trim: true) |> Enum.map(&String.trim/1)
-    Logger.info("#{@log_prefix} #{inspect(args)}")
+    Logger.info("#{log_prefix()} #{inspect(args)}")
 
     [first | rest] = args
-    [group_name, nickname] = first |> String.trim() |> String.split(" ", trim: true)
-    nicknames = rest ++ [nickname]
+    [group, nick] = first |> String.trim() |> String.split(" ", trim: true)
+    nicks = rest ++ [nick]
 
-    unless String.starts_with?(group_name, "#") do
-      Logger.info("#{@log_prefix} Group name must start with \'#\'")
+    unless String.starts_with?(group, "#") do
+      Logger.info("#{log_prefix()} Group name must start with \'#\'")
       :ok
     else
-      Logger.info("#{@log_prefix} #{inspect(group_name)}")
-      Logger.info("#{@log_prefix} #{inspect(nicknames)}")
+      Logger.info("#{log_prefix()} #{inspect(group)}")
+      Logger.info("#{log_prefix()} #{inspect(nicks)}")
 
-      send(self(), {:group, group_name, nicknames})
+      send(self(), {:group, group, nicks})
     end
   end
 
   def handle(_) do
-    Logger.info("#{@log_prefix} Invalid Command")
+    Logger.info("#{log_prefix()} Invalid Command")
   end
 
   @impl true
   def init(socket) do
-    Logger.info("#{@log_prefix} Controlling #{inspect(socket)}")
-    group_table = :ets.new(Chat.Groups, [:set, :protected, :named_table])
-    {:ok, {socket, group_table}}
+    Logger.info("#{log_prefix()} Controlling #{inspect(socket)}")
+    table = :ets.new(:groups, [:set, :protected])
+    nick = "unregistered"
+    {:ok, {nick, socket, table}}
   end
 
   @impl true
-  def handle_info({:tcp, socket, input}, {socket, group_table}) do
+  def handle_info({:tcp, socket, input}, {nick, socket, table}) do
     handle(input)
     :inet.setopts(socket, active: :once)
     :gen_tcp.send(socket, input)
-    {:noreply, {socket, group_table}}
+    {:noreply, {nick, socket, table}}
   end
 
   @impl true
-  def handle_info({:tcp_closed, socket}, {socket, group_table}) do
-    Logger.info("#{@log_prefix} #{inspect(socket)} Closed")
+  def handle_info({:tcp_closed, socket}, {nick, socket, table}) do
+    Logger.info("#{log_prefix()} #{inspect(socket)} Closed")
     :gen_tcp.close(socket)
-    {:stop, :normal, {socket, group_table}}
+    {:stop, :normal, {socket, table}}
   end
 
   @impl true
-  def handle_info({:nck, nickname}, {socket, group_table}) do
-    Chat.Server.set_nickname(nickname, self())
+  def handle_info({:nck, new_nick}, {nick, socket, table}) do
+    Chat.Server.set_nickname(new_nick, self())
 
-    {:noreply, {socket, group_table}}
+    {:noreply, {nick, socket, table}}
   end
 
   @impl true
-  def handle_info({:msg, message}, {socket, group_table}) do
-    Logger.info("#{@log_prefix} #{message}")
-    {:noreply, {socket, group_table}}
+  def handle_info({:msg, recipiants, msg}, {nick, socket, table}) do
+    Logger.info("#{log_prefix()} #{msg}")
+
+    Enum.each(recipiants, fn to ->
+      Chat.Server.send_message(to, nick, msg)
+    end)
+
+    {:noreply, {nick, socket, table}}
   end
 
   @impl true
-  def handle_info({:msg_group, group_name, message}, {socket, group_table}) do
-    case :ets.lookup(group_table, group_name) do
-      [{_group_name, nicknames}] ->
-        Enum.each(nicknames, fn nickname ->
-          Chat.Server.send_message(nickname, message)
+  def handle_info({:msg_group, group, msg}, {nick, socket, table}) do
+    case :ets.lookup(table, group) do
+      [{_group, nicks}] ->
+        Enum.each(nicks, fn to ->
+          Chat.Server.send_message(to, nick, msg)
         end)
 
       [] ->
-        Logger.info("#{@log_prefix} #{group_name} is not a group")
+        Logger.info("#{log_prefix()} #{group} is not a group")
     end
 
-    {:noreply, {socket, group_table}}
+    {:noreply, {nick, socket, table}}
   end
 
   @impl true
-  def handle_info({:grp, group_name, nicknames}, {socket, group_table}) do
-    :ets.insert(group_table, {group_name, nicknames})
-    Logger.info("#{@log_prefix} Current Groups: #{inspect(:ets.tab2list(group_table))}")
-    {:noreply, {socket, group_table}}
+  def handle_info({:grp, group, nicks}, {nick, socket, table}) do
+    :ets.insert(table, {group, nicks})
+    Logger.info("#{log_prefix()} Current Groups: #{inspect(:ets.tab2list(table))}")
+    {:noreply, {nick, socket, table}}
   end
 
   # @impl true
   # def handle_info({:lst}) do
   # end
+
+  @impl true
+  def handle_info({:incoming_msg, from, msg}, {nick, socket, table}) do
+    :gen_tcp.send(socket, "#{from}: #{msg}")
+    {:noreply, {nick, socket, table}}
+  end
 end

@@ -8,8 +8,8 @@ defmodule Chat.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {Chat.Server, []},
-      {Chat.ProxyServer, 6666}
+      {Chat.ProxyServer, 6666},
+      Chat.Server
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

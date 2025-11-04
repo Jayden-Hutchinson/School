@@ -17,8 +17,8 @@ defmodule Chat.Server do
     GenServer.cast(via(), {:set_nickname, {nickname, proxy_pid}})
   end
 
-  def send_message(nickname, message) do
-    GenServer.cast(via(), {:send_message, {nickname, message}})
+  def send_message(to, from, message) do
+    GenServer.cast(via(), {:send_message, {to, from, message}})
   end
 
   @impl true
@@ -37,12 +37,12 @@ defmodule Chat.Server do
   end
 
   @impl true
-  def handle_cast({:send_message, {nickname, message}}, nickname_table) do
-    Logger.info("#{@log_prefix} To #{nickname}: #{message}")
+  def handle_cast({:send_message, {to, from, message}}, nickname_table) do
+    Logger.info("#{@log_prefix} To #{to}: #{message}")
 
-    case :ets.lookup(nickname_table, nickname) do
-      [{_nickname, proxy_pid}] -> send(proxy_pid, {:message, message})
-      [] -> Logger.info("#{@log_prefix} #{nickname} is not a registered user")
+    case :ets.lookup(nickname_table, to) do
+      [{_nickname, proxy_pid}] -> send(proxy_pid, {:incoming_msg, from, message})
+      [] -> Logger.info("#{@log_prefix} #{to} is not a registered user")
     end
 
     {:noreply, nickname_table}
