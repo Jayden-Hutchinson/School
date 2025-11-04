@@ -1,0 +1,2 @@
+- user can use /LST and /GRP before registering
+- provide comments on data structures, e.g. what do you store in ETS?

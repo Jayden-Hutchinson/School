@@ -1,0 +1,7 @@
+- a condition must be used with a mutex
+goroutine 1:                             goroutine 2: 
+	lock mutex                               lock mutex
+	as long as condition is false            make condition true
+	  wait on cond variable                    signal/broadcast cond variable
+	// do work                               unlock mutex
+	unlock mutex
