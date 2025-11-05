@@ -20,12 +20,20 @@ defmodule Chat.Proxy do
   end
 
   def handle("/MSG" <> rest) do
-    [recipiant_str, msg] =
+    parts =
       rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
 
-    recipiants = recipiant_str |> String.split(",")
+    case parts do
+      [recipiant_str, msg] ->
+        recipiants = recipiant_str |> String.split(",")
+        send(self(), {:msg, recipiants, msg})
 
-    send(self(), {:msg, recipiants, msg})
+      [_recipiant_str] ->
+        log("Must provide a message")
+
+      _ ->
+        log("Invalid Input")
+    end
   end
 
   def handle("/GRP" <> rest) do
@@ -42,7 +50,7 @@ defmodule Chat.Proxy do
       log("#{inspect(group)}")
       log("#{inspect(names)}")
 
-      send(self(), {:group, group, names})
+      send(self(), {:grp, group, names})
     end
   end
 
@@ -80,9 +88,19 @@ defmodule Chat.Proxy do
   end
 
   @impl true
-  def handle_info({:nck, new_name}, {_name, socket, table}) do
-    Chat.Server.set_nickname(new_name, self())
-    {:noreply, {new_name, socket, table}}
+  def handle_info({:nck, new_name}, state = {name, socket, table}) do
+    if name == "unregistered" do
+      Chat.Server.set_nickname(new_name, self())
+    else
+      Chat.Server.update_nickname(name, new_name, self())
+    end
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info({:update_nickname, new_nickname}, state = {_name, socket, table}) do
+    {:noreply, {new_nickname, socket, table}}
   end
 
   @impl true
@@ -107,12 +125,17 @@ defmodule Chat.Proxy do
           end
         end)
         |> Enum.uniq()
+        |> Enum.reject(&(&1 == name))
 
       log("Sending Message to #{inspect(recipiants)} message: #{inspect(msg)}")
 
-      Enum.each(recipiants, fn to ->
-        Chat.Server.send_message(to, name, msg)
-      end)
+      if Enum.count(recipiants) == 0 do
+        log("No recipiants entered")
+      else
+        Enum.each(recipiants, fn to ->
+          Chat.Server.send_message(to, name, msg)
+        end)
+      end
     end
 
     {:noreply, state}
@@ -157,8 +180,8 @@ defmodule Chat.Proxy do
   end
 
   @impl true
-  def handle_info({:get_nicknames, names}, state) do
-    log("Users: #{inspect(names)}")
+  def handle_info({:get_nicknames, names}, state = {_name, socket, _table}) do
+    :gen_tcp.send(socket, "Users #{inspect(names)}\n")
     {:noreply, state}
   end
 

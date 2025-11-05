@@ -17,6 +17,10 @@ defmodule Chat.Server do
     GenServer.cast(via(), {:set_nickname, {nickname, proxy_pid}})
   end
 
+  def update_nickname(old_nickname, new_nickname, proxy_pid) do
+    GenServer.cast(via(), {:update_nickname, {old_nickname, new_nickname, proxy_pid}})
+  end
+
   def send_message(to, from, message) do
     GenServer.cast(via(), {:send_message, {to, from, message}})
   end
@@ -34,9 +38,39 @@ defmodule Chat.Server do
 
   @impl true
   def handle_cast({:set_nickname, {nickname, proxy_pid}}, nickname_table) do
-    :ets.insert(nickname_table, {nickname, proxy_pid})
+    if :ets.member(nickname_table, nickname) do
+      Logger.info("#{@log_prefix} User #{inspect(nickname)} already exists.")
+    else
+      :ets.insert(nickname_table, {nickname, proxy_pid})
 
-    Logger.info("#{@log_prefix} New user: #{nickname} #{inspect(:ets.tab2list(nickname_table))}")
+      Logger.info(
+        "#{@log_prefix} New user: #{nickname} #{inspect(:ets.tab2list(nickname_table))}"
+      )
+
+      send(proxy_pid, {:update_nickname, nickname})
+    end
+
+    Logger.info("#{@log_prefix} #{inspect(:ets.tab2list(nickname_table))}")
+
+    {:noreply, nickname_table}
+  end
+
+  @impl true
+  def handle_cast({:update_nickname, {old_nickname, new_nickname, proxy_pid}}, nickname_table) do
+    if :ets.member(nickname_table, new_nickname) do
+      Logger.info("#{@log_prefix} User #{inspect(new_nickname)} already exists.")
+    else
+      :ets.delete(nickname_table, old_nickname)
+      :ets.insert(nickname_table, {new_nickname, proxy_pid})
+
+      Logger.info(
+        "#{@log_prefix} User Updated: #{old_nickname} -> #{new_nickname} #{inspect(:ets.tab2list(nickname_table))}"
+      )
+
+      send(proxy_pid, {:update_nickname, new_nickname})
+    end
+
+    Logger.info("#{@log_prefix} #{inspect(:ets.tab2list(nickname_table))}")
 
     {:noreply, nickname_table}
   end
