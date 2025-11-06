@@ -13,20 +13,20 @@ defmodule Chat.Server do
     GenServer.start_link(__MODULE__, :ok, name: via())
   end
 
-  def set_nickname(nickname, proxy_pid) do
-    GenServer.cast(via(), {:set_nickname, {nickname, proxy_pid}})
+  def set_nickname(old, new, proxy_pid) do
+    GenServer.cast(via(), {:set_nickname, {old, new, proxy_pid}})
   end
 
-  def update_nickname(old_nickname, new_nickname, proxy_pid) do
-    GenServer.cast(via(), {:update_nickname, {old_nickname, new_nickname, proxy_pid}})
-  end
-
-  def send_message(to, from, message) do
-    GenServer.cast(via(), {:send_message, {to, from, message}})
+  def send_message(recipiant, from, message) do
+    GenServer.cast(via(), {:send_message, {recipiant, from, message}})
   end
 
   def get_nicknames(proxy_pid) do
     GenServer.cast(via(), {:get_nicknames, proxy_pid})
+  end
+
+  def get_current_users() do
+    GenServer.call(via(), :current_users)
   end
 
   @impl true
@@ -37,17 +37,31 @@ defmodule Chat.Server do
   end
 
   @impl true
-  def handle_cast({:set_nickname, {nickname, proxy_pid}}, nickname_table) do
-    if :ets.member(nickname_table, nickname) do
-      Logger.info("#{@log_prefix} User #{inspect(nickname)} already exists.")
+  def handle_cast({:set_nickname, old, new, proxy_pid}, nickname_table) do
+    # If exists in nickname table don't add it
+    if :ets.member(nickname_table, new) do
+      Logger.info("#{@log_prefix} User #{inspect(new)} already exists.")
     else
-      :ets.insert(nickname_table, {nickname, proxy_pid})
+      # Add user to nickname table
 
-      Logger.info(
-        "#{@log_prefix} New user: #{nickname} #{inspect(:ets.tab2list(nickname_table))}"
-      )
+      if(new == "unregistered") do
+        # if not registered add the user
+        :ets.insert(nickname_table, {new, proxy_pid})
 
-      send(proxy_pid, {:update_nickname, nickname})
+        Logger.info("#{@log_prefix} New user: #{new} #{inspect(:ets.tab2list(nickname_table))}")
+      else
+        # if already registered update the nickname
+
+        # delete the old nickname
+        :ets.delete(nickname_table, old)
+
+        # insert the new nickname
+        :ets.insert(nickname_table, {new, proxy_pid})
+
+        Logger.info(
+          "#{@log_prefix} User Updated: #{old} -> #{new} #{inspect(:ets.tab2list(nickname_table))}"
+        )
+      end
     end
 
     Logger.info("#{@log_prefix} #{inspect(:ets.tab2list(nickname_table))}")
@@ -76,21 +90,18 @@ defmodule Chat.Server do
   end
 
   @impl true
-  def handle_cast({:send_message, {to, from, message}}, nickname_table) do
-    case :ets.lookup(nickname_table, to) do
-      [{_nickname, proxy_pid}] -> send(proxy_pid, {:incoming_msg, from, message})
-      [] -> Logger.info("#{@log_prefix} #{to} is not a registered user")
+  def handle_cast({:send_message, {recipiant, from, message}}, nickname_table) do
+    case :ets.lookup(nickname_table, recipiant) do
+      [{_nickname, proxy_pid}] -> send(proxy_pid, {:message, from, message})
+      [] -> Logger.info("#{@log_prefix} #{recipiant} is not a registered user")
     end
 
     {:noreply, nickname_table}
   end
 
   @impl true
-  def handle_cast({:get_nicknames, proxy_pid}, nickname_table) do
+  def handle_call(:current_users, _from, nickname_table) do
     nicknames = :ets.match(nickname_table, {:"$1", :_}) |> List.flatten()
-
-    send(proxy_pid, {:get_nicknames, nicknames})
-
-    {:noreply, nickname_table}
+    {:reply, nicknames, nickname_table}
   end
 end
