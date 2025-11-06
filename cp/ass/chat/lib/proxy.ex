@@ -14,9 +14,8 @@ defmodule Chat.Proxy do
     case Chat.parse_nickname(input) do
       {:nickname, nickname} ->
         Chat.Server.set_nickname(state.nickname, nickname, self())
+        send(self(), {:update_nickname, nickname})
         :gen_tcp.send(state.socket, "Nickname set to #{nickname}\n")
-        new_state = %{state | nickname: nickname}
-        {:noreply, new_state}
 
       {:error, reason} ->
         :gen_tcp.send(state.socket, "#{reason}\n")
@@ -24,7 +23,7 @@ defmodule Chat.Proxy do
   end
 
   def handle("/MSG" <> rest, state) do
-    {input, message} =
+    [input, message] =
       rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
 
     if not is_registered(state.nickname) do
@@ -36,7 +35,7 @@ defmodule Chat.Proxy do
         Chat.Server.send_message(recipiant, state.nickname, message)
       end)
 
-      :gen_tcp.send(state.socket, "Message sent to #{recipiants}")
+      :gen_tcp.send(state.socket, "Message sent to #{recipiants}\n")
     end
   end
 
@@ -49,7 +48,7 @@ defmodule Chat.Proxy do
     case Chat.parse_group_name(group_name) do
       {:group_name, group_name} ->
         :ets.insert(state.table, {group_name, nicknames})
-        :gen_tcp.send(state.socket, "Group #{group_name} created")
+        :gen_tcp.send(state.socket, "Group #{group_name} created\n")
 
       {:error, reason} ->
         :gen_tcp.send(state.socket, "#{reason}\n")
@@ -58,7 +57,7 @@ defmodule Chat.Proxy do
 
   def handle("/LST" <> _rest, state) do
     nicknames = Chat.Server.get_current_users()
-    :gen_tcp.send(state.socket, nicknames)
+    :gen_tcp.send(state.socket, "#{inspect(nicknames)}\n")
   end
 
   def handle(_, _state) do
@@ -91,21 +90,6 @@ defmodule Chat.Proxy do
   end
 
   @impl true
-  def handle_info({:group_msg, group, msg}, state) do
-    case :ets.lookup(state.table, group) do
-      [{_group, nicknames}] ->
-        Enum.each(nicknames, fn to ->
-          Chat.Server.send_message(to, state.nickname, msg)
-        end)
-
-      [] ->
-        log("#{group} is not a group")
-    end
-
-    {:noreply, state}
-  end
-
-  @impl true
   def handle_info({:error, reason}, state) do
     :gen_tcp.send(state.socket, "Error: #{reason}\n")
     {:noreply, state}
@@ -120,23 +104,16 @@ defmodule Chat.Proxy do
   end
 
   @impl true
-  def handle_info({:lst}, state) do
-    Chat.Server.get_nicknames(self())
-    {:noreply, state}
-  end
-
-  @impl true
   def handle_info({:message, from, message}, state) do
-    :gen_tcp.send(state.socket, "#{from}: #{message}")
+    :gen_tcp.send(state.socket, "#{from}: #{message}\n")
 
     {:noreply, state}
   end
 
   @impl true
-  def handle_info({:current_users}, state) do
-    nicknames = Chat.Server.get_current_users()
-    :gen_tcp.send(state.socket, "Users #{inspect(nicknames)}\n")
-    {:noreply, state}
+  def handle_info({:update_nickname, nickname}, state) do
+    new_state = %{state | nickname: nickname}
+    {:noreply, new_state}
   end
 
   @impl true

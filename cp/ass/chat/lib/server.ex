@@ -37,7 +37,7 @@ defmodule Chat.Server do
   end
 
   @impl true
-  def handle_cast({:set_nickname, old, new, proxy_pid}, nickname_table) do
+  def handle_cast({:set_nickname, {old, new, proxy_pid}}, nickname_table) do
     # If exists in nickname table don't add it
     if :ets.member(nickname_table, new) do
       Logger.info("#{@log_prefix} User #{inspect(new)} already exists.")
@@ -102,6 +102,7 @@ defmodule Chat.Server do
   @impl true
   def handle_call(:current_users, _from, nickname_table) do
     nicknames = :ets.match(nickname_table, {:"$1", :_}) |> List.flatten()
+    Logger.info("#{@log_prefix} #{inspect(nicknames)}")
     {:reply, nicknames, nickname_table}
   end
 end
