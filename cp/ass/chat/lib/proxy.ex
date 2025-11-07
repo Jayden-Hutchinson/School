@@ -27,9 +27,11 @@ defmodule Chat.Proxy do
       rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
 
     if not is_registered(state.nickname) do
+      log("\e[32mMust be registered to use command.\e[0m\n")
       :gen_tcp.send(state.socket, "\e[32mMust be registered to use command.\e[0m\n")
     else
       recipiants = input |> String.split(",", trim: true) |> get_group_recipiants(state)
+      log("Message sent to #{inspect(recipiants)}\n")
 
       Enum.each(recipiants, fn recipiant ->
         Chat.Server.send_message(recipiant, state.nickname, message)
@@ -40,7 +42,7 @@ defmodule Chat.Proxy do
   end
 
   def handle("/GRP" <> rest, state) do
-    {group_name, input} =
+    [group_name, input] =
       rest |> String.trim() |> String.split(" ", parts: 2, trim: true)
 
     nicknames = input |> String.split(",", trim: true)
@@ -48,6 +50,7 @@ defmodule Chat.Proxy do
     case Chat.parse_group_name(group_name) do
       {:group_name, group_name} ->
         :ets.insert(state.table, {group_name, nicknames})
+        log("Group #{group_name} created\n")
         :gen_tcp.send(state.socket, "Group #{group_name} created\n")
 
       {:error, reason} ->
@@ -105,6 +108,8 @@ defmodule Chat.Proxy do
 
   @impl true
   def handle_info({:message, from, message}, state) do
+    log("#{from}: #{message}\n")
+
     :gen_tcp.send(state.socket, "#{from}: #{message}\n")
 
     {:noreply, state}
@@ -123,7 +128,7 @@ defmodule Chat.Proxy do
   end
 
   defp is_registered(nickname) do
-    nickname == "unregistered"
+    nickname != "unregistered"
   end
 
   defp is_group(nickname) do
